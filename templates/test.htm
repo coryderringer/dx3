@@ -1,0 +1,2084 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+    Learning Task
+{% endblock%}
+
+{% block bodycontent %}
+
+<!-- happy: &#x1F600 -->
+<!-- sad: &#x1F922 -->
+
+<!-- TODOS: put in sliders for data, switch sides for slider faces when you need to-->
+
+
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text" name="story" style="display:none">Medication Task</p>
+                <p class="navbar-text" name="monetary" style="display:none">Shape Task</p>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FINAL JUDGMENTS -->
+
+    <div id="testContainer" style="width:800px" class="container well" style="display:none">
+
+        <div class="section">
+            <div id="taskDisplay">
+                <div class="text-center">
+
+
+
+                    <div class="row" id="judgment1Div" style="display:none">
+                        <div class="col-xs-8" class="text-center">
+                            <div id="effectDiv" class="text-center">
+                                <h2>
+                                    <span name="story">Which drug will YOU prescribe...</span>
+                                    <span name="monetary">Which color would you choose...</span>
+                                </h2>
+                                <!-- find a place for the patient impact info here -->
+                                <div>
+                                    <p name="story">for the outcome to be GOOD?</p>
+                                    <p name="monetary">for the shape to be <span name="goodShape">SHAPE NAME</span>?</p>
+                                </div>
+
+                                <div class="text-center" style="height:100px; border-bottom: 1px solid grey"> <!-- this is the div that we want split up vertically -->
+                                    <div class="col-xs-4"></div>
+                                    <div class="col-xs-4 text-center">
+                                        <div id="var2_outcome">
+                                            <img id="var2_outcome_image" src="/static/images/blank.png" style="height:70px"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div id="instructionsDiv">
+                                    <div name="story">
+                                        <p>Now you will make a <b>one-shot guess</b> about the relationship between the drugs and outcomes. <b>You will choose a drug for a patient and win or lose money based on the corresponding outcome.</b> If the patient has a GOOD outcome, we will add $1.00 to your bonus. If the patient has a BAD outcome, we will subtract $1.00 from your bonus. (If you end the experiment with a negative bonus, your bonus will be rounded up to zero.)</p>
+
+
+                                    </div>
+                                    
+                                    <div name="monetary">
+                                        <p>Now you will make a <b>one-shot guess</b> about the relationship between the shapes and colors. <b>You will choose a color and win or lose money based on the corresponding shape.</b> If the resulting shape is <span name="goodShape"></span>, we will add $1.00 to your bonus. If the resulting shape is <span name="badShape"></span>, we will subtract $1.00 from your bonus. (If you end the experiment with a negative bonus, your bonus will be rounded up to zero.)</p> 
+                                        
+                                        
+                                    </div>
+                                    <br><br>
+                                </div>
+                                    
+
+                                <div id="choiceDiv" style="height:150px">
+                                    <p id="v1_Prompt">Please click to choose:<br>
+                                        <span name="story">Will you prescribe <span name="var1a">Drug A</span> or <span name="var1b">Drug B</span> if you want the outcome to be GOOD?</span>
+                                        <span name="monetary">Will you choose <span name="var1a">COLOR 1</span> or <span name="var1b">COLOR 2</span> if you want the shape to be <span name="goodShape"></span>?</span>
+                                    </p>
+                                    <p id="confidence_Prompt" style="display:none">How confident are you about your choice?</p>
+
+                                    <div class = "row">
+                                        <div id="var1a" class="col-xs-3 text-center">
+                                            <p><span name="var1a">Drug A</span></p>
+                                            <img name="var1a_image" src="/static/images/blank.png" style="width:100px"/>
+                                        </div>
+                                        <div class = "col-xs-6 text-center">
+                                            <div style="height:45px"></div>
+                                            <div id="feedbackDiv" class="text-center" style="font-size: 10pt; padding:0px; height:75px">
+                                                <span id="feedbackSpan" style="visibility: hidden;">You have chosen</span>
+                                                <span id="clickInstruction"></span>
+                                            </div>
+                                            <div id="causalSliderDiv">
+                                                <input id="strengthSlider" style="display:none" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="10"/>
+                                            </div>
+                                        </div>
+                                        <div id="var1b" class="col-xs-3 text-center">
+                                            <p><span name="var1b">Drug B</span></p>
+                                            <img name="var1b_image" src="/static/images/blank.png" style="width:100px"/>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="causalFeedbackDiv" style="display:none" class="row">
+                                    <br>
+                                    <p id="feedbackPara">test</p>
+                                    <div class="col-xs-4"></div>
+                                    <div class="col-xs-4 text-center">
+                                        
+                                        <img id="causalFeedbackImage" src="/static/images/blank.png" style="height:100px"/>
+                                    </div>
+                                    <div class="col-xs-4"></div>
+                                   
+
+                                </div>
+
+                                <!-- <div id="causalSliderDiv" class="row" style="display:none">
+                                   
+                                    <p>How confident are you about your decision?</p>
+                                    <div class="row">
+                                        <div id="causal_left_div" class="col-xs-3 text-center">
+                                            <p><span name="var1a">Drug A</span></p>
+                                            <img name="var1a_image" src="/static/images/blank.png" style="width:100px"/>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div style="height:45px"></div>
+                                            <input id="strengthSlider" style="display:none"data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="10"/>
+                                        </div>
+                                        <div id="causal_right_div" class="col-xs-3 text-center">
+                                            <p><span name="var1b">Drug A</span></p>
+                                            <img name="var1b_image" src="/static/images/blank.png" style="width:100px"/>
+                                        </div>
+                                    </div>                                    
+                              
+                              
+
+                                </div> -->
+                                
+                            </div>
+                   
+                            <br>
+                            <div id="buttonDiv" class="row">
+                                <div class="col-xs-3"></div>
+                                <div class="col-xs-3">
+                                    <button id="backButton" class="btn btn-default">Back</button> 
+                                </div>
+                                <div class="col-xs-3">
+                                    <button id="nextButton" class="btn btn-default">Next</button>
+                                </div>
+                                <div class="col-xs-3"></div>
+                            </div>
+
+
+
+                        </div>
+
+
+
+
+
+
+
+
+                        <!-- score div -->
+                        <div id="scoreDiv" class="col-xs-4 text-center">
+
+                            <p><b>Current Bonus:</b></p>
+                            <div id="totalBonusDiv" class="scoreDisplay">
+                                <span id="totalBonusSpan"></span>
+                            </div>
+                        </div>
+                    </div>
+    
+
+
+
+
+                    <div id="memoryDiv" class="text-center" style="display:none">
+                        <p style="display:none" id="testSpan">memory 1</p> <!-- testing -->
+                        <h2>
+                            <p id="memory1_question" style="display:none">
+                                <span name="story">How many patients had a <span name="var2a"></span>/<span name="var2b"></span> outcome?</span>
+                                <span name="monetary">How many <span name="var2a"></span>S/<span name="var2b"></span>S were there?</span>
+                            </p>
+                            <p id="memory2_question" style="display:none">
+                                <span name="story">How many patients took <span name="var1a"></span> / <span name="var1b"></span>?</span>
+                                <span name="monetary">How many <span name="var1a"></span>S/<span name="var1b"></span>S were there?</span>
+                            </p>
+                        </h2>
+                        <div class="row" id="memory1_var2_row" style="height:100px; ">
+                            <div id="top_left_div" class="col-xs-6" style="height:100px">
+
+                                <p><span name="var1a"></span></p>
+                                <img id="top_left_image" src="/static/images/blank.png" style="height:60%"/>
+
+                            </div>
+                            <div id="top_right_div" class="col-xs-6" style="height:100px">
+
+                                <p><span name="var1b"></span></p>
+                                <img id="top_right_image" src="/static/images/blank.png" style="height:60%"/>
+
+                            </div>
+                        </div> <!-- end of row -->
+                        <div class="row" id="memory1_text_row" style="display:none">
+                            <div class="col-xs-6" name="left_Div">
+                                <p>
+                                    <span name="story">Of the patients you just saw, <span name="var1a_Total"><b>NUMBER</b></span> received <b><span name="var1a">OUTCOME</span></b>. How many of them had a <span name="var2a"></span>/<span name="var2b"></span> outcome?</span>
+                                    <span name="monetary">The color was <b><span name="var1a">SHAPE</span></b>
+                                        <span name="var1a_Total"><b>NUMBER</b></span>
+                                        times.
+                                        When the color was <span name="var1a">SHAPE</span>, how many times was the shape
+                                        <span name="var2a">SHAPE1</span>/
+                                        <span name="var2b">SHAPE2</span>?</span>
+                                </p>
+                            </div>
+                            <div class="col-xs-6" name="right_Div">
+                                <p>
+                                    <span name="story">Of the patients you just saw, <span name="var1b_Total"><b>NUMBER</b></span> received <b><span name="var1b">OUTCOME</span></b>. How many of them had a <span name="var2a"></span>/<span name="var2b"></span> outcome?</span>
+                                    <span name="monetary">The color was <b><span name="var1b">SHAPE</span></b>
+                                        <span name="var1b_Total"><b>NUMBER</b></span>
+                                        times.
+                                        When the color was <span name="var1b">SHAPE</span>, how many times was the shape
+                                        <span name="var2a">SHAPE1</span>/
+                                        <span name="var2b">SHAPE2</span>?</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row" id="memory2_text_row" style="display:none">
+                            <div class="col-xs-6" name="left_Div">
+                                <p>
+                                    <span name="story">Of the patients you just saw, <span name="var2a_Total"><b>NUMBER</b></span> had <b><span name="var2a">OUTCOME</span> outcomes</b>. How many of them received <span name="var1a"></span>/<span name="var1b"></span>?</span>
+                                    <span name="monetary">The shape was <b><span name="var2a">SHAPE</span></b>
+                                        <span name="var2a_Total"><b>NUMBER</b></span>
+                                        times.
+                                        When the shape was <span name="var2a">SHAPE</span>, how many times was the color
+                                        <span name="var1a">SHAPE1</span>/
+                                        <span name="var1b">SHAPE2</span>?</span>
+                                </p>
+                            </div>
+                            <div class="col-xs-6" name="right_Div">
+                                <p>
+                                    <span name="story">Of the patients you just saw, <span name="var2b_Total"><b>NUMBER</b></span> had <b><span name="var2b">OUTCOME</span> outcomes</b>. How many of them received <span name="var1a"></span>/<span name="var1b"></span>?</span>
+                                    <span name="monetary">The shape was <b><span name="var2b">SHAPE</span></b>
+                                        <span name="var2b_Total"><b>NUMBER</b></span>
+                                        times.
+                                        When the shape was <span name="top_right_var_Name">SHAPE</span>, how many times was the color
+                                        <span name="var1a">SHAPE1</span>/
+                                        <span name="var1b">SHAPE2</span>?</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row" id="memory1_var1_row" style="height:100px">
+                            <div class="col-xs-6" id="var1_row_left">
+                                <div class="row">
+                                    <div name="bottom_left_div" class="col-xs-6" style="height:100px">
+                                        <p>bottom left</p>
+                                        <img name="bottom_left_image" src="/static/images/blank.png" style="height:50px"/>
+                                    </div>
+                                    <div name="bottom_right_div" class="col-xs-6" style="height:100px">
+                                        <p>bottom right</p>
+                                        <img name="bottom_right_image" src="/static/images/blank.png" style="height:50px"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6" id="var1_row_right">
+                                <div class="row">
+                                    <div name="bottom_left_div" class="col-xs-6" style="height:100px">
+                                        <p>bottom left</p>
+                                        <img name="bottom_left_image" src="/static/images/blank.png" style="height:50px"/>
+                                    </div>
+                                    <div name="bottom_right_div" class="col-xs-6" style="height:100px">
+                                        <p>bottom right</p>
+                                        <img name="bottom_right_image" src="/static/images/blank.png" style="height:50px"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="memory1_input_row" style="height:50px">
+                            <div class="col-xs-6">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <input type="text" id="input_1" style="width:50px"/>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <input type="text" id="input_2" style="width:50px"/>
+                                    </div>
+                                </div>
+                                <button id="var1a_nextButton">Next</button>
+                            </div>
+                            <div class="col-xs-6" name="right_Div">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <input type="text" id="input_3" style="width:50px"/>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <input type="text" id="input_4" style="width:50px"/>
+                                    </div>
+                                </div>
+                                <button id="var1b_nextButton">Next</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- ajax form to send final judgment data to datastore -->
+            <form id="testDataform" method="post" style="display:none" action="/finalJudgment" >
+
+                <!-- PUT IN THE SLIDERS, ALSO CONSIDER FADE -->
+                <input id="condition" type="hidden" name="condition" ><br>
+                <input id="valence" type="hidden" name="valence" ><br>
+                <input id="leftDrugColor" type="hidden" name="leftDrugColor" ><br>
+                <input id="rightDrugColor" type="hidden" name="rightDrugColor" ><br>
+
+                <input id="var1a_Name" type="hidden" name="var1a_Name" ><br>
+                <input id="var1b_Name" type="hidden" name="var1b_Name" ><br>
+
+                <input id="var2a_Name" type="hidden" name="var2a_Name"><br>
+                <input id="var2b_Name" type="hidden" name="var2b_Name"><br>
+
+                <!-- old: -->
+                <input id="mem1_cellA" type="hidden" name="mem1_cellA"><br>
+                <input id="mem1_cellB" type="hidden" name="mem1_cellB"><br>
+                <input id="mem1_cellC" type="hidden" name="mem1_cellC"><br>
+                <input id="mem1_cellD" type="hidden" name="mem1_cellD"><br>
+
+                <input id="mem1_cellA" type="hidden" name="mem1_cellA"><br>
+                <input id="mem1_cellB" type="hidden" name="mem1_cellB"><br>
+                <input id="mem1_cellC" type="hidden" name="mem1_cellC"><br>
+                <input id="mem1_cellD" type="hidden" name="mem1_cellD"><br>
+
+                <!-- new: -->
+                <p>var2a_given_var1a<input id="var2a_given_var1a" name="var2a_given_var1a"/></p>
+                <p>var2b_given_var1a<input id="var2b_given_var1a" name="var2b_given_var1a"/></p>
+                <p>var2a_given_var1b<input id="var2a_given_var1b" name="var2a_given_var1b"/></p>
+                <p>var2b_given_var1b<input id="var2b_given_var1b" name="var2b_given_var1b"/></p>
+
+                <p>var1a_given_var2a<input id="var1a_given_var2a" name="var1a_given_var2a"/></p>
+                <p>var1b_given_var2a<input id="var1b_given_var2a" name="var1b_given_var2a"/></p>
+                <p>var1a_given_var2b<input id="var1a_given_var2b" name="var1a_given_var2b"/></p>
+                <p>var1b_given_var2b<input id="var1b_given_var2b" name="var1b_given_var2b"/></p>
+
+
+                <input id="causalJudgment" type="hidden" name="causalJudgment" ><br>
+                <input id="runningBonusInput" name="runningBonusInput" type="hidden">
+                <input id="test" type="hidden" name="test" ><br>
+                <input id="testOrder" type="hidden" name= "testOrder" ><br>
+                <input id="Submit" type="hidden" onclick="mySubmit()" value="Submit"><br>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+
+
+</body>
+
+
+
+
+
+
+<script>
+
+// NOTE:
+// var1 is the second row (it's the drug in the story conditions)
+// var2 is always the first row (it's the outcome in the story conditions)
+
+$(document).ready(function(){
+
+
+
+    var test = {
+
+        init: function(){
+            // this function initializes the test variables in the page,
+            // and calls the necessary functions and listeners to start the
+            // final judgments (memory and causal strength)
+            
+
+            test.var1a = '{{var1_Names_Left}}'
+            test.var1b = '{{var1_Names_Right}}'
+            test.var2a = '{{var2_Names_Left}}'
+            test.var2b = '{{var2_Names_Right}}'
+
+            test.frequency1 = {{frequency1}}
+            test.frequency2 = {{frequency2}}
+            test.position2 = {{position2}}
+            test.condition = '{{condition}}'
+            // test.condition = 'combined' // testing
+
+            // bonus amt
+            test.bonusAmt = {{bonus}}
+            // test.bonusAmt = 30 // testing
+
+            if(test.frequency2 === test.position2){
+                test.valence = 'rare-positive'
+            }else{
+                test.valence = 'rare-negative'
+            }
+
+            test.drugNames = ['XF702', 'BT339', 'GS596', 'PR242']
+
+            test.TO = {{testOrder}}
+            
+
+            if(test.TO === 1){
+                test.order = [causal, memory1, memory2]
+            }else if(test.TO === 2){
+                test.order = [causal, memory2, memory1]
+            }else if(test.TO === 3){
+                test.order = [memory1, causal, memory2]
+            }else if(test.TO === 4){
+                test.order = [memory1, memory2, causal]
+            }else if(test.TO === 5){
+                test.order = [memory2, causal, memory1]
+            }else if(test.TO === 6){
+                test.order = [memory2, memory1, causal]
+            }
+            $('#testOrder').val(test.TO)
+
+            // memory1 is effect|cause
+            // TO = 1: Causal, E|C, C|E
+    		// TO = 2: Causal, C|E, E|C
+    		// TO = 3: E|C, Causal, C|E
+    		// TO = 4: E|C, C|E, Causal
+    		// TO = 5: C|E, Causal, E|C
+    		// TO = 6: C|E, E|C, Causal
+
+            test.var1a = test.var1a
+            test.var1b = test.var1b
+
+            test.var2a = test.var2a
+            test.var2b = test.var2b
+
+
+            test.imageSources = ['/static/images/square.png',
+                '/static/images/circle.png',
+                '/static/images/star.png',
+                '/static/images/triangle.png',
+                '/static/images/oval.png',
+                '/static/images/diamond.png',
+                '/static/images/rectangle.png',
+                '/static/images/pentagon.png',
+                '/static/images/good.png',
+                '/static/images/bad.png',
+
+                '/static/images/lightblue.pill.png',
+                '/static/images/darkblue.pill.png',
+                '/static/images/orange.pill.png',
+                '/static/images/purple.pill.png',
+
+				'/static/images/red.square.png',
+				'/static/images/purple.square.png',
+				'/static/images/green.square.png',
+				'/static/images/blue.square.png']
+
+            test.colors = ['{{drugColor_Left}}', '{{drugColor_Right}}'] // this is the order from the backend, something like [3,1]
+
+            for(var i = 0; i < test.imageSources.length; i++){
+                // 2a
+                if(test.imageSources[i].split('/')[3].split('.')[0] === test.var2a.toLowerCase()){
+                    test.var2a_img_src = test.imageSources[i]
+                }
+                // 2b
+                if(test.imageSources[i].split('/')[3].split('.')[0] === test.var2b.toLowerCase()){
+                    test.var2b_img_src = test.imageSources[i]
+                }
+
+                if(test.condition === 'monetary'){ // only for color squares
+
+                    // 1a
+                    if(test.imageSources[i].toLowerCase().split('/')[3].split('.')[0] === test.var1a.toLowerCase()){
+						if(test.imageSources[i].split('/')[3].split('.')[1] === 'square'){
+							test.var1a_img_src = test.imageSources[i]
+						}
+
+                    }
+                    // 1b
+                    if(test.imageSources[i].toLowerCase().split('/')[3].split('.')[0] === test.var1b.toLowerCase()){
+                        if(test.imageSources[i].split('/')[3].split('.')[1] === 'square'){
+							test.var1b_img_src = test.imageSources[i]
+						}
+                    }
+                }else{ // pills
+                    // 1a
+                    if(test.imageSources[i].split('/')[3].split('.')[0] === '{{drugColor_Left}}'){
+                        if(test.imageSources[i].split('/')[3].split('.')[1] === 'pill'){
+                            test.var1a_img_src = test.imageSources[i]
+                        }
+                    }
+
+                    if(test.imageSources[i].split('/')[3].split('.')[0] === '{{drugColor_Right}}'){
+                        if(test.imageSources[i].split('/')[3].split('.')[1] === 'pill'){
+                            test.var1b_img_src = test.imageSources[i]
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+            // randomize order of asking (drugs)
+            if(Math.round(Math.random()) == 0){
+                test.var1askOrder = 0 // this asks about the left drug first (left is the most common drug if test.position1 == 0)
+            }else{
+                test.var1askOrder = 1 // this asks about the right drug first (right is the most common drug if test.position1 == 1)
+            }
+
+            if(Math.round(Math.random()) == 0){
+                test.var2askOrder = 0 // this asks about the left face first (left is the most common drug if test.position2 == 0)
+            }else{
+                test.var2askOrder = 1 // this asks about the right face first (right is the most common drug if test.position2 == 1)
+            }
+
+
+            test.progress = 0
+
+            // if(test.testOrder == 0){ // memory judgments first
+            //     if(test.memOrder == 0){ //
+            //         test.order = [memory1, memory2, causal]
+            //         $('#testOrder').val(1)
+            //     }else{
+            //         test.order = [memory2, memory1, causal]
+            //         $('#testOrder').val(2)
+            //     }
+            // }else{
+            //     if(test.memOrder == 0){ //
+            //         test.order = [causal, memory1, memory2]
+            //         $('#testOrder').val(3)
+            //     }else{
+            //         test.order = [causal, memory2, memory1]
+            //         $('#testOrder').val(4)
+            //     }
+            // }
+
+
+
+            // cache DOM
+            test.cacheDOM()
+            test.render(test.progress)
+
+            test.trafficFlow()
+            // render page
+
+
+        },
+
+        trafficFlow: function(){
+            //console.log('directing traffic')
+
+            if(test.progress > 0){
+                test.order[test.progress-1].unbindEvents()
+            }
+
+            if(test.order[test.progress] == causal){
+                //console.log('causal init')
+                causal.init()
+            }else if(test.order[test.progress] == memory1){
+                //console.log('mem1 init')
+                memory1.init()
+            }else if(test.order[test.progress] == memory2){
+                //console.log('mem2 init')
+                memory2.init()
+
+            }
+
+            // get progress
+
+
+        },
+
+        cacheDOM: function(){
+            test.$co = $('#testContainer') // container div
+            test.$causal_div = test.$co.find('#judgment1Div')
+
+            test.$var1a = test.$co.find('#var1a')
+            test.$var1b = test.$co.find('#var1b')
+
+            test.$memory1_div = test.$co.find('#memoryDiv')
+            test.$memory2_div = test.$co.find('#memoryDiv')
+
+
+            test.$var1a_Spans = test.$co.find('span[name="var1a"]')
+            test.$var1b_Spans = test.$co.find('span[name="var1b"]')
+
+            test.$var2a_Spans = test.$co.find('span[name="var2a"]')
+            test.$var2b_Spans = test.$co.find('span[name="var2b"]')
+            test.$var2a_images = test.$co.find('[name="var2a_image"]').toArray()
+            test.$var2b_images = test.$co.find('[name="var2b_image"]').toArray()
+            test.$var1a_images = test.$co.find('[name=var1a_image]').toArray()
+            test.$var1b_images = test.$co.find('[name=var1b_image]').toArray()
+
+            test.$var1a_Total = test.$co.find('[name="var1a_Total"]')
+            test.$var1b_Total = test.$co.find('[name="var1b_Total"]')
+            test.$var2a_Total = test.$co.find('[name="var2a_Total"]')
+            test.$var2b_Total = test.$co.find('[name="var2b_Total"]')
+
+            test.$top_left_divs = test.$co.find('#top_left_div')
+            test.$top_right_divs = test.$co.find('#top_right_div')
+            test.$bottom_left_divs = test.$co.find('[name="bottom_left_div"]')
+            test.$bottom_right_divs = test.$co.find('[name="bottom_right_div"]')
+
+            test.$var1a_Judgment = test.$co.find('#var1a_Judgment')
+            test.$var1b_Judgment = test.$co.find('#var1b_Judgment')
+
+            test.$var1a_Slider_Common = test.$co.find('#var1a_Slider_Common')
+            test.$var1a_Slider_Rare = test.$co.find('#var1a_Slider_Rare')
+            test.$var1b_Slider_Common = test.$co.find('#var1b_Slider_Common')
+            test.$var1b_Slider_Rare = test.$co.find('#var1b_Slider_Rare')
+
+            test.$var1a_Slider_Common_Div = test.$co.find('#var1a_Slider_Common_Div')
+            test.$var1b_Slider_Rare_Div =  test.$co.find('#var1b_Slider_Rare_Div')
+            test.$var1a_Slider_Rare_Div =  test.$co.find('#var1a_Slider_Rare_Div')
+            test.$var1b_Slider_Common_Div =  test.$co.find('#var1b_Slider_Common_Div')
+
+            test.$var1a_Slider_Div = test.$co.find('#sliderDivA')
+            test.$var1b_Slider_Div = test.$co.find('#sliderDivB')
+
+            // inputs
+            test.$input_1 = test.$co.find("#input_1") // within 1a trials (left drug), how many 2a (left outcome)? etc
+            test.$input_2 = test.$co.find("#input_2")
+            test.$input_3 = test.$co.find("#input_3")
+            test.$input_4 = test.$co.find("#input_4")
+
+            test.$input_2a_1a = test.$co.find("#input_2a_1a") // within 2a trials (left outcome), how many 1a (left drug)? etc
+            test.$input_2a_1b = test.$co.find("#input_2a_1b")
+            test.$input_2b_1a = test.$co.find("#input_2b_1a")
+            test.$input_2b_1b = test.$co.find("#input_2b_1b")
+
+
+            // buttons
+            test.$nextButton = test.$co.find('#nextButton')
+            test.$A_Button = test.$co.find('#var1a_nextButton')
+            test.$B_Button = test.$co.find('#var1b_nextButton')
+            test.$memory2_var2a_Button = test.$co.find('#var2a_nextButton')
+            test.$memory2_var2b_Button = test.$co.find('#var2b_nextButton')
+
+            test.$causalJudgment = test.$co.find('#causalJudgment')
+
+            test.$dataform = test.$co.find('#testDataform')
+
+            // note that this means '$var2a' (etc) only applies to svgs!
+            // svgs
+
+            test.$var2a_svg = test.$bottom_left_divs.find('[name="'+test.var2a+'"]')
+			test.$var2b_svg = test.$bottom_right_divs.find('[name="'+test.var2b+'"]')
+
+            test.$var1a_svg = test.$top_left_divs.find('[name="'+test.var1b+'"]')
+			test.$var1b_svg = test.$top_right_divs.find('[name="'+test.var1a+'"]')
+
+
+
+        },
+
+        render: function(progress){
+            // this function puts *all* of the numbers in the spans
+            // it also puts *all* of the correct images/svgs in their correct places
+            // then it shows the test container which has all three of the judgments
+            // that is all this function does.
+
+            // spans
+            test.$var1a_Spans.text(String(test.var1a))
+            test.$var1b_Spans.text(String(test.var1b))
+            test.$var2a_Spans.text(String(test.var2a))
+            test.$var2b_Spans.text(String(test.var2b))
+
+            if(test.position2 === 0){
+                $('[name="goodShape"]').text(test.var2b)
+                $('#var2_outcome_image').attr('src', test.var2b_img_src)
+                $('[name="badShape"]').text(test.var2a)
+            }else{
+                $('[name="goodShape"]').text(test.var2a)
+                $('#var2_outcome_image').attr('src', test.var2a_img_src)
+                $('[name="badShape"]').text(test.var2b)
+            }
+
+            // frequency1 (drugs/shape1), 36 and 12
+            if(test.frequency1 === 1){
+                test.$var1a_Total.text('12')
+                test.$var1b_Total.text('36')
+            }else{ // frequency1 = 0: left is common, right is rare
+
+                test.$var1a_Total.text('36')
+                test.$var1b_Total.text('12')
+            }
+            //
+            //
+            //
+            // // position2 (faces/shape2)
+            // if(test.position2 === 1){
+            //     // spans
+            //     test.$var2a_Spans.text(String(test.var2b))
+            //     test.$var2b_Spans.text(String(test.var2a))
+            //
+            //     // images
+            //     if(test.condition != 'monetary'){
+            //         // if position2 = 1, bad on right
+            //         for(var i = 0; i < test.$var2a_images.length; i++){
+            //             $(test.$var2a_images[i]).attr('src', '/static/images/good.png')
+            //             $(test.$var2b_images[i]).attr('src', '/static/images/bad.png')
+            //         }
+            //     }
+            //
+            // }else{
+            //     // spans
+            //     test.$var2a_Spans.text(String(test.var2a))
+            //     test.$var2b_Spans.text(String(test.var2b))
+            //
+            //     // images
+            //
+            //     if(test.condition != 'monetary'){
+            //         // if position2 = 0, bad on left
+            //         for(var i = 0; i < test.$var2a_images.length; i++){
+            //             $(test.$var2a_images[i]).attr('src', '/static/images/bad.png')
+            //             $(test.$var2b_images[i]).attr('src', '/static/images/good.png')
+            //         }
+            //     }
+            // }
+            //
+            // // frequency2 (faces/shape2)
+            // if(test.frequency2 === 1){ // left is rare, right is common
+            //     test.$var2a_Total.text('16')
+            //     test.$var2b_Total.text('32')
+            // }else{ // left is common, right is rare
+            //     test.$var2a_Total.text('32')
+            //     test.$var2b_Total.text('16')
+            // }
+            //
+            //
+            // test.$var1a_svg.show()
+            // test.$var1b_svg.show()
+            // test.$var2a_svg.show()
+            // test.$var2b_svg.show()
+            if(test.condition == 'monetary'){
+                $('[name="story"]').hide()
+                $('[name="monetary"]').show()
+            }else{
+                $('[name="monetary"]').hide()
+                $('[name="story"]').show()
+
+            }
+
+            test.$co.show()
+
+        },
+
+        getTrialStartTime: function(){
+            var trialDate = new Date()
+            test.trialStartTime = trialDate.getTime()
+        },
+
+        judgmentCheck: function(value_A, value_B, max, judgmentType){ // judgment for each drug (given outcomes)
+            if(test.condition != 'monetary'){
+                // judgmentType = 1 (memory1) or 2 (memory2)
+
+                // if at least one guess missing
+                if(value_A == '' | value_B == ''){
+                    if(judgmentType === 1){
+                        return "Please make a numeric guess about each outcome!"
+                    }else{
+                        return "Please make a numeric guess about each drug!"
+                    }
+                }
+
+                // if one of the judgments isn't an integer
+                if(Number.isInteger(Number(value_A)) == false | Number.isInteger(Number(value_B)) == false){
+                    if(value_A == '' | value_B == ''){
+                        if(judgmentType === 1){
+                            return "Please make a numeric guess about each outcome!"
+                        }else{
+                            return "Please make a numeric guess about each drug!"
+                        }
+                    }
+                }
+
+                if(Number(value_A) + Number(value_B) != Number(max)){
+                    return 'Guesses must add to '+String(max)+'!'
+                }
+            }else{
+                // judgmentType = 1 (memory1) or 2 (memory2)
+
+                // if at least one guess missing
+                if(value_A == '' | value_B == ''){
+                    return "Please make a numeric guess about each shape!"
+                }
+
+                // if one of the judgments isn't an integer
+                if(Number.isInteger(Number(value_A)) == false | Number.isInteger(Number(value_B)) == false){
+                    return "Please make a numeric guess about each shape!"
+                }
+
+                if(Number(value_A) + Number(value_B) != Number(max)){
+                    return 'Guesses must add to '+String(max)+'!'
+                }
+            }
+            return 0 // no problems
+        },
+
+        sendAjax: function(form){
+
+            if(form == 'causal'){
+                test.$causalJudgment.val(causal.$strengthSlider.val()) // send the raw judgment for this, transform it in R
+                $('#runningBonusInput').val(test.bonusAmt)
+                console.log('causal')
+            }else if(form == 'memory1'){
+                // memory1.loadform() took care of loading the form
+                console.log('memory1 judgment')
+            }else if(form == 'memory2'){
+                console.log('memory2 judgment')
+            }
+
+
+            if(test.progress >= 2){
+                // submit form
+
+                //console.log("condition: "+$('#condition').val())
+                //console.log("leftDrugColor: "+$('#leftDrugColor').val())
+                //console.log("rightDrugColor: "+$('#rightDrugColor').val())
+                //console.log("var1a_Rarity: "+$('#var1a_Rarity').val())
+                //console.log("var1b_Rarity: "+$('#var1b_Rarity').val())
+                //console.log("var1a_Name: "+$('#var1a_Name').val())
+                //console.log("var1b_Name: "+$('#var1b_Name').val())
+                //console.log("leftNumberBad: "+$('#leftNumberBad').val())
+                //console.log("rightNumberBad: "+$('#rightNumberBad').val())
+                //console.log("goodOutcomesLeft: "+$('#goodOutcomesLeft').val())
+                //console.log("goodOutcomesRight: "+$('#goodOutcomesRight').val())
+                //console.log("badOutcomesLeft: "+$('#badOutcomesLeft').val())
+                //console.log("badOutcomesRight: "+$('#badOutcomesRight').val())
+                //console.log("causalJudgment: "+$('#causalJudgment').val())
+                //console.log("testOrder: "+$('#testOrder').val())
+
+                // $.ajax({
+                //     url:"/AjaxMemoryTest",
+                //     data: test.$dataform.serialize(),
+                //     // data: $('#dataform1').serialize(),
+                //     dataType: 'json',
+                //     type: "POST",
+                //     cache: false,
+                //     error: function() {alert("Error")},
+                //     success: function() {alert("Success")}
+                // });
+                // //console.log('AJAX SENT')
+                test.mySubmit()
+            }else{
+                test.progress ++
+                test.trafficFlow()
+            }
+
+        },
+
+        mySubmit: function(){
+
+            $('#testDataform').submit()
+            // alert('submitting form!')
+        },
+
+        startTimer: function(){
+            start = new Date();
+            return start.getTime();
+        },
+
+        resetAll: function(){
+            memory1.unbindEvents()
+            memory2.unbindEvents()
+            causal.unbindEvents()
+        },
+
+        creditRender: function(credits){
+            // this function takes a number in cents and converts it to dollars
+
+            // main.creditRender(6) -> 0.06
+            // main.creditRender(100) -> 1.00
+
+            // display credits div
+            if(credits % 100 == 0){
+                var displayCredits = String(credits/100) + '.00';
+            }else if(credits %10 == 0){
+                displayCredits = String(credits/100) +'0';
+            }else{
+                displayCredits = credits/100;
+            }
+            return(displayCredits);
+            // $creditSpan.html(displayCredits);
+        },
+
+    }
+
+    // Causal judgment module
+    var causal = {
+
+        init: function(){
+            causal.cacheDOM()
+            causal.bindEvents(test.var1a, test.var1b, 'reset')
+            causal.render('reset')
+        },
+
+        cacheDOM: function(){
+
+            //// console.log(this)
+            causal.$div = test.$co.find('#judgment1Div')
+            causal.$strengthSlider = causal.$div.find('#strengthSlider')
+
+        },
+
+        bindEvents: function(leftName, rightName, stage){
+            // buttons
+            if(stage === 'reset'){
+                
+
+                test.$var1a.unbind().on('click', causal.leftClick)
+                test.$var1b.unbind().on('click', causal.rightClick)
+
+                $('#nextButton').unbind().on('click', function(){
+                    if($('#clickInstruction').text() == ''){
+                        alert('Please make a selection!')
+                    }else{
+                        causal.render('slider')
+                        causal.bindEvents(test.var1a, test.var1b, 'slider')    
+                    }
+                })
+
+                $('#backButton').prop('disabled', true)
+
+
+                
+                
+               
+            
+            }else if(stage == 'slider'){
+                console.log('BE Stage: '+stage)
+                
+                var leftName = test.var1a
+                var rightName = test.var1b
+
+               
+
+                // sliders (use them in next stage, but no reason not to initialize)
+                // NOTE FOR ANALYSIS: 
+                    // need freq1 and freq2 to figure out IC pattern
+                    // this is going to be a little weird because we're asking about the common outcome in one scenario and the rare outcome in the other scenario. (MAKE SURE IT WORKS THIS WAY IN THE STORY CONDITION)
+                    // theoretically I think I could believe that the good shape is related to red, but that the bad shape is not related to either
+                        // think about this, because you're going to have to address it.
+                $('#strengthSlider').slider({
+                    formatter: function(value) {
+                        if(value < 4){
+                            return 'I am very confident about '+leftName
+                        }else if(value < 10){
+                            return 'I am somewhat confident about '+leftName
+                        }else if(value == 10){
+                            return 'I am not sure at all'
+                        }else if(value > 16){
+                            return 'I am very confident about '+rightName
+                        }else{
+                            return 'I am somewhat confident about '+rightName
+                        }
+
+                    }
+                })
+                $('#strengthSlider').slider('refresh')
+                $('#strengthSlider').slider('enable')
+                
+                $('#nextButton').unbind().on('click', function(){
+                    
+                    if(Number($('#strengthSlider').val()) < 10){
+                        if($('#clickInstruction').text() === test.var1a){
+                            // test.sendAjax('causal')
+                            causal.bindEvents(test.var1a, test.var1b, 'feedback')    
+                            causal.render('feedback')
+                        }else{
+                            alert('Your choice and confidence judgment do not match!')
+                        }
+                    }else if(Number($('#strengthSlider').val()) > 10){
+                        if($('#clickInstruction').text() == test.var1b){
+                            // test.sendAjax('causal')
+                            causal.bindEvents(test.var1a, test.var1b, 'feedback')    
+                            causal.render('feedback')
+                        }else{
+                            console.log(Number($('#strengthSlider').val()) > 10)
+                            console.log($('#clickInstruction').text() === test.var1b)
+                            alert('Your choice and confidence judgment do not match!')
+                        }
+                    }else{
+                        // test.sendAjax('causal')
+                        causal.bindEvents(test.var1a, test.var1b, 'feedback')    
+                        causal.render('feedback')
+                    }
+
+                    
+                })
+
+                
+                
+
+                $('#backButton').unbind().on('click', function(){
+                    causal.bindEvents(test.var1a, test.var1b, 'reset')
+                    causal.render('reset')
+                })
+                $('#backButton').prop('disabled', false)
+
+
+            }else if(stage == 'feedback'){
+                $('#backButton').prop('disabled', true)
+                $('#nextButton').unbind().on('click', function(){
+                    test.sendAjax('causal')
+                })
+               
+            }
+
+
+
+
+
+        },
+        render: function(stage){
+            console.log('render stage: '+stage)
+            if(stage === 'reset'){              
+
+                // correct images
+                if(test.condition === 'monetary'){
+                    $('[name="var1a_image"]').attr('src', test.var1a_img_src).css('height', '50px').css('width', '50px')
+                    $('[name="var1b_image"]').attr('src', test.var1b_img_src).css('height', '50px').css('width', '50px')
+                }else{
+                    $('[name="var1a_image"]').attr('src', test.var1a_img_src)
+                    $('[name="var1b_image"]').attr('src', test.var1b_img_src)
+                }
+
+                // removeBorder to prevent jumping when we insert borders
+                if($('#clickInstruction').text() == ''){
+                    causal.removeBorder(test.$var1a)
+                    causal.removeBorder(test.$var1b)    
+                }
+                
+
+                // unfade divs from prev
+                $('#top_left_div').css('opacity', '1.0')
+                $('#top_right_div').css('opacity', '1.0')
+                $('[name="left_Div"]').css('opacity', '1.0')
+                $('[name="right_Div"]').css('opacity', '1.0')
+
+                $('#confidence_Prompt').hide()
+                $('#v1_Prompt').show()
+                
+
+                $('#causalSliderDiv').hide()
+                $('#feedbackDiv').show()
+
+                $('#choiceDiv').show()
+
+                test.$memory1_div.hide()
+                test.$memory2_div.hide()
+                test.$causal_div.show()
+                
+            }else if(stage == 'slider'){
+                $('#v1_Prompt').hide()
+                $('#confidence_Prompt').show()
+
+                $('#feedbackDiv').hide()
+                $('#causalSliderDiv').show()
+                
+                
+
+            }else if(stage == 'feedback'){
+                $('#instructionsDiv').hide()
+                $('#choiceDiv').hide()
+                $('#causalFeedbackDiv').show()
+                $('#var2_outcome_image').css('opacity', '0.2')
+                
+
+                // render feedback
+                if(test.valence === 'rare-negative'){ // mostly positive, good outcome
+                    test.bonusAmt += 100
+                    
+                    if(test.condition != 'monetary'){
+                        $('#causalFeedbackImage').attr('src', '/static/images/good.png')
+                        
+                        
+                        // feedback text, need to adapt for monetary!!! testing
+                        $('#feedbackPara').html('Great job! The patient had a GOOD outcome!<br>$1.00 has been added to your bonus.')
+                    }else{
+                        // if pos2 = 0, left is bad. Because this is rare-neg, right (2b) is correct
+                        if(test.position2 == 0){
+                            $('#causalFeedbackImage').attr('src', test.var2b_img_src)
+                            $('#feedbackPara').html('Great job! The shape was '+ test.var2b +'!<br>$1.00 has been added to your bonus.')    
+                        }else{
+                            // if pos2 = 1, right is bad. Because this is rare-neg, left (2a) is correct
+                            $('#causalFeedbackImage').attr('src', test.var2a_img_src)
+                            $('#feedbackPara').html('Great job! The shape was '+ test.var2a +'!<br>$1.00 has been added to your bonus.')    
+                        }
+
+                        
+                    }
+                }else{
+                    
+                    test.bonusAmt -= 100
+                    
+                    
+                    if(test.condition != 'monetary'){
+                        $('#causalFeedbackImage').attr('src', '/static/images/bad.png')
+                        
+                        
+                        // feedback text, need to adapt for monetary!!! testing
+                        $('#feedbackPara').html('Whoops! The patient had a BAD outcome!<br>$1.00 has been subtracted from your bonus. Remember that if you end the experiment with a negative bonus, it will be rounded up to zero. (Don\'t get discouraged though, because participants usually end up with a positive bonus!)')
+                    }else{
+                        // if freq2 = 0, it's the one on the left
+                        if(test.frequency2 == 0){
+                            $('#causalFeedbackImage').attr('src', test.var2a_img_src)
+                            $('#feedbackPara').html('Whoops! The shape was '+ test.var2a +'!<br>$1.00 has been subtracted from your bonus. Remember that if you end the experiment with a negative bonus, it will be rounded up to zero. (Don\'t get discouraged though, because participants usually end up with a positive bonus!)')
+                        }else{
+                            // make sure it's always the common one!
+                            $('#causalFeedbackImage').attr('src', test.var2b_img_src)
+                            $('#feedbackPara').html('Whoops! The shape was '+ test.var2b +'!<br>$1.00 has been subtracted from your bonus. Remember that if you end the experiment with a negative bonus, it will be rounded up to zero. (Don\'t get discouraged though, because participants usually end up with a positive bonus!)')
+                        }
+                    }
+                }
+
+                $('#causalSliderDiv').hide()
+                $('#causalFeedbackDiv').show()
+
+            }
+            if(test.bonusAmt < 0){
+                $('#totalBonusSpan').text('-$'+test.creditRender(Math.abs(test.bonusAmt)))
+            }else{
+                $('#totalBonusSpan').text('$'+test.creditRender(Math.abs(test.bonusAmt)))
+            }
+
+            
+        },
+
+        leftClick: function(){
+            $('#feedbackSpan').css('visibility', 'visible')
+            $('#clickInstruction').text(test.var1a)
+            causal.removeBorder(test.$var1b)
+            causal.insertBorder(test.$var1a)
+            
+           
+            
+        },
+        rightClick: function(){
+            $('#feedbackSpan').css('visibility', 'visible')
+            $('#clickInstruction').text(test.var1b)
+            causal.removeBorder(test.$var1a)
+            causal.insertBorder(test.$var1b)
+            
+           
+            
+        },
+
+        insertBorder: function(object){
+            object.css('border', '5px solid grey')
+            object.css('-moz-border-radius', '20px')
+            object.css('border-radius', '15px')
+            object.css('padding', '5px')
+        },
+
+        removeBorder: function(object){
+            // doesn't really remove the border, because that creates weird visual jumps.
+            // instead makes the border the same color as a bootstrap well
+
+            object.css('border', '5px solid #F5F5F5')
+            object.css('padding', '5px')
+        },
+
+        unbindEvents: function(){
+            //console.log('unbind causal')
+            test.$nextButton.unbind()
+            test.$causal_div.hide()
+        }
+    }
+
+    var memory1 = {
+        // memory1 asks about var2 given var1
+        init: function(){
+            // if(test.var1askOrder == 0){ // functions for rendering
+            //     memory1.drugQuestions = [memory1.var1aJudgment, memory1.var1bJudgment]
+            // }else{
+            //     memory1.drugQuestions = [memory1.var1bJudgment, memory1.var1aJudgment]
+            // }
+
+            memory1.progress = 0 // progress for THIS SPECIFIC module
+            memory1.cacheDOM()
+            memory1.bindEvents()
+            memory1.render()
+        },
+
+        cacheDOM: function(){
+            memory1.$div = test.$co.find('#memoryDiv')
+            // memory1.$memory1_var1a = memory1.$div.find('#memory1_var1a')
+            // memory1.$memory1_var1b = memory1.$div.find('#memory1_var1b')
+            //
+            // memory1.$var1a_Total = memory1.$div.find('#var1a_Total')
+            // memory1.$var1b_Total = memory1.$div.find('#var1b_Total')
+            //
+            // memory1.$var1a_textInput = memory1.$div.find('#var1a_textInput')
+            // memory1.$var1b_textInput = memory1.$div.find('#var1b_textInput')
+            // memory1.$var1a_Button = memory1.$div.find('#var1a_Button')
+            // memory1.$var1b_Button = memory1.$div.find('#var1b_Button')
+            //
+            // memory1.$var1a_Judgment = memory1.$div.find('#var1a_Judgment')
+            // memory1.$var1b_Judgment = memory1.$div.find('#var1b_Judgment')
+            //
+            // // svgs
+            // if(test.position1 === 1){
+			// 	memory1.$shape1a = memory1.$memory1_var1a.find('[name="'+test.var1b+'"]')
+			// 	memory1.$shape1b = memory1.$memory1_var1b.find('[name="'+test.var1a+'"]')
+			// }else{
+            //     memory1.$shape1a = memory1.$memory1_var1a.find('[name="'+test.var1a+'"]')
+			// 	memory1.$shape1b = memory1.$memory1_var1b.find('[name="'+test.var1b+'"]')
+			// }
+
+        },
+
+        render: function(){
+            test.$co.hide()
+
+
+            $('#testSpan').text('memory 1')
+            // show span
+            $('#memory2_question').hide()
+            $('#memory1_question').show()
+            $('#memory2_text_row').hide()
+            $('#memory1_text_row').show()
+
+            if(memory1.progress == 0){
+                // blank the inputs
+                $('#input_1').val('')
+                $('#input_2').val('')
+                $('#input_3').val('')
+                $('#input_4').val('')
+            }
+
+            ///////////////////////////////////////////////////////////////////
+            ////////////////////////// correct images /////////////////////////
+            ///////////////////////////////////////////////////////////////////
+
+            // top images
+
+            if(test.condition === 'monetary'){
+                $('#top_left_image').attr('src', test.var1a_img_src)//.css('height', '50px').css('width', '50px')
+                $('#top_right_image').attr('src', test.var1b_img_src)//.css('height', '50px').css('width', '50px')
+            }else{
+                // pills
+                $('#top_left_image').attr('src', test.var1a_img_src).css('height', '41px').css('width', '100px')
+                $('#top_right_image').attr('src', test.var1b_img_src).css('height', '41px').css('width', '100px')
+            }
+
+
+            // bottom images
+
+            if(test.condition === 'monetary'){
+                $('[name="bottom_left_image"]').attr('src', test.var2a_img_src)//.css('height', '50px').css('width', '50px')
+                $('[name="bottom_right_image"]').attr('src', test.var2b_img_src)//.css('height', '50px').css('width', '50px')
+            }else{
+                // faces
+                $('[name="bottom_left_image"]').attr('src', test.var2a_img_src).css('height', '50px').css('width', '50px')
+                $('[name="bottom_right_image"]').attr('src', test.var2b_img_src).css('height', '50px').css('width', '50px')
+            }
+
+
+            ///////////////////////////////////////////////////////////////////
+            /////////////////////////// correct spans /////////////////////////
+            ///////////////////////////////////////////////////////////////////
+
+            // top and middle, shape spans
+
+            // top
+            $('#top_left_div').children('p').text(test.var1a)
+            $('#top_right_div').children('p').text(test.var1b)
+
+            // middle
+            $('[name="top_left_var_Name"]').text(test.var1a)
+            $('[name="top_right_var_Name"]').text(test.var1b)
+
+
+
+            // bottom shape spans
+
+            $('[name="bottom_left_div"]').children('p').text(test.var2a)
+            $('[name="bottom_right_div"]').children('p').text(test.var2b)
+
+            $('[name="bottom_left_var_Name"]').text(test.var2a)
+            $('[name="bottom_right_var_Name"]').text(test.var2b)
+
+
+            // frequency spans
+            // frequency1 (drugs/shape1), 36 and 12
+            if(test.frequency1 === 1){
+                $('[name="top_left_var_Total"]').text('12')
+                $('[name="top_right_var_Total"]').text('36')
+            }else{ // frequency1 = 0: left is common, right is rare
+                $('[name="top_left_var_Total"]').text('36')
+                $('[name="top_right_var_Total"]').text('12')
+            }
+
+            ///////////////////////////////////////////////////////////////////
+            //////////////////////// opacity adjustments //////////////////////
+            ///////////////////////////////////////////////////////////////////
+            // fade one half first
+            if(test.var1askOrder === 0){ // ask about left drug first
+                if(memory1.progress === 0){
+                    // fade right
+                    $('#top_right_div').css('opacity', '0.2')
+                    $('[name="right_Div"]').css('opacity', '0.2')
+                    $('#var1_row_right').css('opacity', '0.2')
+                    $('#input_3').attr('disabled', true)
+                    $('#input_4').attr('disabled', true)
+                    $('#var1b_nextButton').attr('disabled', true).css('opacity', '0.2')
+
+                    // unfade left
+                    $('#top_left_div').css('opacity', '1.0')
+                    $('[name="left_Div"]').css('opacity', '1.0')
+                    $('#var1_row_left').css('opacity', '1.0')
+                    $('#input_1').attr('disabled', false)
+                    $('#input_2').attr('disabled', false)
+                    $('#var1a_nextButton').attr('disabled', false).css('opacity', '1.0')
+
+                }else if(memory1.progress === 1){
+                    // fade left
+                    $('#top_left_div').css('opacity', '0.2')
+                    $('[name="left_Div"]').css('opacity', '0.2')
+                    $('#var1_row_left').css('opacity', '0.2')
+                    $('#input_1').attr('disabled', true)
+                    $('#input_2').attr('disabled', true)
+                    $('#var1a_nextButton').attr('disabled', true).css('opacity', '0.2')
+
+                    // unfade right
+                    $('#top_right_div').css('opacity', '1.0')
+                    $('[name="right_Div"]').css('opacity', '1.0')
+                    $('#var1_row_right').css('opacity', '1.0')
+                    $('#input_3').attr('disabled', false)
+                    $('#input_4').attr('disabled', false)
+                    $('#var1b_nextButton').attr('disabled', false).css('opacity', '1.0')
+
+
+                }
+            }else if(test.var1askOrder === 1){
+                if(memory1.progress === 1){
+                    // fade right
+                    $('#top_right_div').css('opacity', '0.2')
+                    $('[name="right_Div"]').css('opacity', '0.2')
+                    $('#var1_row_right').css('opacity', '0.2')
+                    $('#input_3').attr('disabled', true)
+                    $('#input_4').attr('disabled', true)
+                    $('#var1b_nextButton').attr('disabled', true).css('opacity', '0.2')
+
+                    // unfade left
+                    $('#top_left_div').css('opacity', '1.0')
+                    $('[name="left_Div"]').css('opacity', '1.0')
+                    $('#var1_row_left').css('opacity', '1.0')
+                    $('#input_1').attr('disabled', false)
+                    $('#input_2').attr('disabled', false)
+                    $('#var1a_nextButton').attr('disabled', false).css('opacity', '1.0')
+                }else if(memory1.progress === 0){
+                    // fade left
+                    $('#top_left_div').css('opacity', '0.2')
+                    $('[name="left_Div"]').css('opacity', '0.2')
+                    $('#var1_row_left').css('opacity', '0.2')
+                    $('#input_1').attr('disabled', true)
+                    $('#input_2').attr('disabled', true)
+                    $('#var1a_nextButton').attr('disabled', true).css('opacity', '0.2')
+
+                    // unfade right
+                    $('#top_right_div').css('opacity', '1.0')
+                    $('[name="right_Div"]').css('opacity', '1.0')
+                    $('#var1_row_right').css('opacity', '1.0')
+                    $('#input_3').attr('disabled', false)
+                    $('#input_4').attr('disabled', false)
+                    $('#var1b_nextButton').attr('disabled', false).css('opacity', '1.0')
+                }
+            }
+            memory1.$div.show()
+            test.$co.show()
+            // memory1.drugQuestions[memory1.progress]()
+        },
+
+        bindEvents: function(){
+            test.$A_Button.unbind()
+            test.$B_Button.unbind()
+
+            test.var1askOrder = 0 // testing
+
+            if(memory1.progress === 0){
+                if(test.var1askOrder === 0){
+
+                    test.$A_Button.unbind().on('click', function(){
+                        // store judgment
+                        console.log('left button')
+                        memory1.incrementJudgment('A')
+                    })
+                }else{
+                    test.$B_Button.unbind().on('click', function(){
+                        // store judgment
+                        memory1.incrementJudgment('B')
+                    })
+                }
+
+            }else{
+                if(test.var1askOrder === 0){
+                    test.$B_Button.unbind().on('click', function(){
+                        // store judgment
+                        memory1.incrementJudgment('B')
+                    })
+                }else{
+                    test.$A_Button.unbind().on('click', function(){
+                        // store judgment
+                        memory1.incrementJudgment('A')
+                    })
+                }
+            }
+
+        },
+
+        var1aJudgment: function(){
+            // make left side opaque, disable
+            memory1.$var1b_Judgment.css('opacity', '0.2')
+            memory1.$var1b_textInput.prop('disabled', true)
+
+            // make this side not opaque, enable
+            memory1.$var1a_Judgment.css('opacity', '1.0')
+            memory1.$var1a_textInput.prop('disabled', false)
+
+
+            $('#memoryDiv').hide()
+            $('#memoryDiv').show()
+
+        },
+
+        var1bJudgment: function(){
+            // make left side opaque, disable
+            memory1.$var1a_Judgment.css('opacity', '0.2')
+            memory1.$var1a_textInput.prop('disabled', true)
+
+            // make this side not opaque, enable
+            memory1.$var1b_Judgment.css('opacity', '1.0')
+            memory1.$var1b_textInput.prop('disabled', false)
+
+
+            $('#memoryDiv').hide()
+            $('#memoryDiv').show()
+
+        },
+
+        incrementJudgment: function(input){
+            console.log(input)
+            //// // console.log(faceOrder)
+            if(input == 'A'){
+
+                // test.$input_1
+                // test.$input_2
+                // test.$input_3
+                // test.$input_4
+
+                var value_A = test.$input_1.val()
+                var value_B = test.$input_2.val()
+
+                if(test.frequency1 === 1){
+                    var max = 12
+                }else{
+                    var max = 36
+                }
+                console.log(String(max))
+
+                var problems = test.judgmentCheck(value_A = value_A, value_B = value_B, max=max, judgmentType = 1)
+
+            }else if(input == 'B'){
+                var value_A = test.$input_3.val()
+                var value_B = test.$input_4.val()
+
+                if(test.frequency1 === 1){
+                    var max = 36
+                }else{
+                    var max = 12
+                }
+
+                var problems = test.judgmentCheck(value_A = value_A, value_B = value_B, max=max, judgmentType = 1)
+
+            }
+
+            //// console.log('PROBLEMS: '+problems)
+            if(problems != 0){ // if there are problems, alert and return
+                alert(problems)
+                return
+            }
+
+            // if we've made it this far, the value is legit.
+            memory1.loadForm()
+
+            if(memory1.progress < 1){
+                memory1.progress ++
+
+                //// console.log('Rendering')
+                memory1.render()
+                memory1.bindEvents()
+
+            }else{
+                console.log('submitting form')
+                test.sendAjax('memory1')
+                // test.mySubmit()
+            }
+        },
+
+        loadForm: function(){
+            $("#condition").val(test.condition)
+            $('#valence').val(test.valence)
+
+
+
+            if(test.frequency1 === 0){
+                $("#var1a_Rarity").val('Common')
+                $("#var1b_Rarity").val('Rare')
+            }else{
+                $("#var1a_Rarity").val('Rare')
+                $("#var1b_Rarity").val('Common')
+            }
+
+            if(test.frequency2 === 0){
+                $('#var2a_Rarity').val('Common')
+                $('#var2b_Rarity').val('Rare')
+            }else if(test.frequency2 === 1){
+                $('#var2a_Rarity').val('Rare')
+                $('#var2b_Rarity').val('Common')
+            }
+
+            if(test.condition != 'monetary'){
+
+                var color_a = test.var1a_img_src.split('/')[3].split('.')[0]
+                var color_b = test.var1b_img_src.split('/')[3].split('.')[0]
+
+
+                var color = String(test.var1a_color).split('/')
+                color = color[color.length-1].split('.')[0]
+                $("#var1a_Name").val(color)
+
+                var color = String(test.var1b_color).split('/')
+                color = color[color.length-1].split('.')[0]
+                $("#var1b_Name").val(color)
+
+                // drug name
+                $("#leftDrugColor").val(color_a)
+                $("#rightDrugColor").val(color_b)
+
+
+            }
+
+
+            $('#var1a_Name').val(test.var1a)
+            $('#var1b_Name').val(test.var1b)
+            $('#var2a_Name').val(test.var2a)
+            $('#var2b_Name').val(test.var2b)
+
+
+
+            // load actual judgments
+
+            // old method:
+            if(test.frequency1 === 0 & test.frequency2 === 0){
+                $('#mem1_cellA').val($('#input_1').val())
+                $('#mem1_cellB').val($('#input_2').val())
+                $('#mem1_cellC').val($('#input_3').val())
+                $('#mem1_cellD').val($('#input_4').val())
+            }else if(test.frequency1 === 1 & test.frequency2 === 0){
+                $('#mem1_cellA').val($('#input_3').val())
+                $('#mem1_cellB').val($('#input_4').val())
+                $('#mem1_cellC').val($('#input_1').val())
+                $('#mem1_cellD').val($('#input_2').val())
+            }else if(test.frequency1 === 0 & test.frequency2 === 1){
+                $('#mem1_cellA').val($('#input_2').val())
+                $('#mem1_cellB').val($('#input_1').val())
+                $('#mem1_cellC').val($('#input_4').val())
+                $('#mem1_cellD').val($('#input_3').val())
+            }else if(test.frequency1 === 1 & test.frequency2 === 1){
+                $('#mem1_cellA').val($('#input_4').val())
+                $('#mem1_cellB').val($('#input_3').val())
+                $('#mem1_cellC').val($('#input_2').val())
+                $('#mem1_cellD').val($('#input_1').val())
+            }
+            // end old method
+
+            // new method
+            // if(test.position2 === 0){
+
+            $('#var2a_given_var1a').val($('#input_1').val())
+            $('#var2b_given_var1a').val($('#input_2').val())
+            $('#var2a_given_var1b').val($('#input_3').val())
+            $('#var2b_given_var1b').val($('#input_4').val())
+
+            // }else{
+            //     $('#var2b_given_var1a').val($('#input_1').val())
+            //     $('#var2a_given_var1a').val($('#input_2').val())
+            //     $('#var2b_given_var1b').val($('#input_3').val())
+            //     $('#var2a_given_var1b').val($('#input_4').val())
+            //
+            // }
+            // end new method
+
+        },
+
+        unbindEvents: function(){
+            //console.log('unbind memory1')
+            // undo everything in event binder
+            test.$A_Button.unbind()
+            test.$B_Button.unbind()
+
+            // hide
+            test.$memory1_div.hide()
+        }
+
+    }
+
+
+
+    var memory2 = {
+        // memory2 is var1_given_var2
+        // given variable
+        init: function(){
+            if(test.var2askOrder == 0){ // functions for rendering
+                memory2.drugQuestions = [memory2.var2aJudgment, memory2.var2bJudgment]
+            }else{
+                memory2.drugQuestions = [memory2.var2bJudgment, memory2.var2aJudgment]
+            }
+
+            memory2.progress = 0 // progress for THIS SPECIFIC module
+            memory2.cacheDOM()
+            memory2.bindEvents()
+            memory2.render()
+        },
+
+        cacheDOM: function(){
+            memory2.$div = test.$co.find('#memoryDiv')
+            // memory1.$memory1_var1a = memory1.$div.find('#memory1_var1a')
+            // memory1.$memory1_var1b = memory1.$div.find('#memory1_var1b')
+            //
+            // memory1.$var1a_Total = memory1.$div.find('#var1a_Total')
+            // memory1.$var1b_Total = memory1.$div.find('#var1b_Total')
+            //
+            // memory1.$var1a_textInput = memory1.$div.find('#var1a_textInput')
+            // memory1.$var1b_textInput = memory1.$div.find('#var1b_textInput')
+            // memory1.$var1a_Button = memory1.$div.find('#var1a_Button')
+            // memory1.$var1b_Button = memory1.$div.find('#var1b_Button')
+            //
+            // memory1.$var1a_Judgment = memory1.$div.find('#var1a_Judgment')
+            // memory1.$var1b_Judgment = memory1.$div.find('#var1b_Judgment')
+            //
+            // // svgs
+            // if(test.position1 === 1){
+			// 	memory1.$shape1a = memory1.$memory1_var1a.find('[name="'+test.var1b+'"]')
+			// 	memory1.$shape1b = memory1.$memory1_var1b.find('[name="'+test.var1a+'"]')
+			// }else{
+            //     memory1.$shape1a = memory1.$memory1_var1a.find('[name="'+test.var1a+'"]')
+			// 	memory1.$shape1b = memory1.$memory1_var1b.find('[name="'+test.var1b+'"]')
+			// }
+
+        },
+
+        render: function(){
+
+            // need to put the correct images in the correct places
+            test.$co.hide()
+            $('#testSpan').text('memory 2')
+            // show span
+            $('#memory1_question').hide()
+            $('#memory2_question').show()
+            $('#memory1_text_row').hide()
+            $('#memory2_text_row').show()
+
+            if(memory2.progress == 0){
+                // inputs
+                $('#input_1').val('')
+                $('#input_2').val('')
+                $('#input_3').val('')
+                $('#input_4').val('')
+            }
+
+
+            ///////////////////////////////////////////////////////////////////
+            ////////////////////////// correct images /////////////////////////
+            ///////////////////////////////////////////////////////////////////
+
+            // top images
+
+            if(test.condition === 'monetary'){
+                $('#top_left_image').attr('src', test.var2a_img_src)//.css('height', '50px').css('width', '50px')
+                $('#top_right_image').attr('src', test.var2b_img_src)//.css('height', '50px').css('width', '50px')
+            }else{
+                // faces
+                $('#top_left_image').attr('src', test.var2a_img_src).css('height', '50px').css('width', '50px')
+                $('#top_right_image').attr('src', test.var2b_img_src).css('height', '50px').css('width', '50px')
+            }
+
+            // bottom images
+            if(test.condition === 'monetary'){
+                $('[name="bottom_left_image"]').attr('src', test.var1a_img_src)//.css('height', '50px').css('width', '50px')
+                $('[name="bottom_right_image"]').attr('src', test.var1b_img_src)//.css('height', '50px').css('width', '50px')
+            }else{
+                // pills
+                $('[name="bottom_left_image"]').attr('src', test.var1a_img_src).css('height', '41px').css('width', '100px')
+                $('[name="bottom_right_image"]').attr('src', test.var1b_img_src).css('height', '41px').css('width', '100px')
+            }
+
+
+
+
+
+            ///////////////////////////////////////////////////////////////////
+            /////////////////////////// correct spans /////////////////////////
+            ///////////////////////////////////////////////////////////////////
+
+            // top and middle, shape spans
+
+            // top
+            $('#top_left_div').children('p').text(test.var2a)
+            $('#top_right_div').children('p').text(test.var2b)
+
+            // middle
+            $('[name="top_left_var_Name"]').text(test.var2a)
+            $('[name="top_right_var_Name"]').text(test.var2b)
+
+
+
+            // bottom shape spans
+
+            $('[name="bottom_left_div"]').children('p').text(test.var1a)
+            $('[name="bottom_right_div"]').children('p').text(test.var1b)
+
+            $('[name="bottom_left_var_Name"]').text(test.var1a)
+            $('[name="bottom_right_var_Name"]').text(test.var1b)
+
+
+
+            console.log('YOU ARE HERE')
+            // frequency spans
+            // frequency1 (faces/shape2), 32 and 16
+            if(test.frequency2 === 1){
+                $('[name="var2a_Total"]').text('16')
+                $('[name="var2b_Total"]').text('32')
+            }else{ // frequency1 = 0: left is common, right is rare
+                $('[name="var2a_Total"]').text('32')
+                $('[name="var2b_Total"]').text('16')
+            }
+
+            ///////////////////////////////////////////////////////////////////
+            //////////////////////// opacity adjustments //////////////////////
+            ///////////////////////////////////////////////////////////////////
+            // fade one half first
+            if(test.var2askOrder === 0){ // ask about left drug first
+                if(memory2.progress === 0){
+                    // fade right
+                    $('#top_right_div').css('opacity', '0.2')
+                    $('[name="right_Div"]').css('opacity', '0.2')
+                    $('#var1_row_right').css('opacity', '0.2')
+                    $('#input_3').attr('disabled', true)
+                    $('#input_4').attr('disabled', true)
+                    $('#var1b_nextButton').attr('disabled', true).css('opacity', '0.2')
+
+                    // unfade left
+                    $('#top_left_div').css('opacity', '1.0')
+                    $('[name="left_Div"]').css('opacity', '1.0')
+                    $('#var1_row_left').css('opacity', '1.0')
+                    $('#input_1').attr('disabled', false)
+                    $('#input_2').attr('disabled', false)
+                    $('#var1a_nextButton').attr('disabled', false).css('opacity', '1.0')
+
+                }else if(memory2.progress === 1){
+                    // fade left
+                    $('#top_left_div').css('opacity', '0.2')
+                    $('[name="left_Div"]').css('opacity', '0.2')
+                    $('#var1_row_left').css('opacity', '0.2')
+                    $('#input_1').attr('disabled', true)
+                    $('#input_2').attr('disabled', true)
+                    $('#var1a_nextButton').attr('disabled', true).css('opacity', '0.2')
+
+                    // unfade right
+                    $('#top_right_div').css('opacity', '1.0')
+                    $('[name="right_Div"]').css('opacity', '1.0')
+                    $('#var1_row_right').css('opacity', '1.0')
+                    $('#input_3').attr('disabled', false)
+                    $('#input_4').attr('disabled', false)
+                    $('#var1b_nextButton').attr('disabled', false).css('opacity', '1.0')
+
+
+                }
+            }else if(test.var2askOrder === 1){
+                if(memory2.progress === 1){
+                    // fade right
+                    $('#top_right_div').css('opacity', '0.2')
+                    $('[name="right_Div"]').css('opacity', '0.2')
+                    $('#var1_row_right').css('opacity', '0.2')
+                    $('#input_3').attr('disabled', true)
+                    $('#input_4').attr('disabled', true)
+                    $('#var1b_nextButton').attr('disabled', true).css('opacity', '0.2')
+
+                    // unfade left
+                    $('#top_left_div').css('opacity', '1.0')
+                    $('[name="left_Div"]').css('opacity', '1.0')
+                    $('#var1_row_left').css('opacity', '1.0')
+                    $('#input_1').attr('disabled', false)
+                    $('#input_2').attr('disabled', false)
+                    $('#var1a_nextButton').attr('disabled', false).css('opacity', '1.0')
+                }else if(memory2.progress === 0){
+                    // fade left
+                    $('#top_left_div').css('opacity', '0.2')
+                    $('[name="left_Div"]').css('opacity', '0.2')
+                    $('#var1_row_left').css('opacity', '0.2')
+                    $('#input_1').attr('disabled', true)
+                    $('#input_2').attr('disabled', true)
+                    $('#var1a_nextButton').attr('disabled', true).css('opacity', '0.2')
+
+                    // unfade right
+                    $('#top_right_div').css('opacity', '1.0')
+                    $('[name="right_Div"]').css('opacity', '1.0')
+                    $('#var1_row_right').css('opacity', '1.0')
+                    $('#input_3').attr('disabled', false)
+                    $('#input_4').attr('disabled', false)
+                    $('#var1b_nextButton').attr('disabled', false).css('opacity', '1.0')
+                }
+            }
+            memory2.$div.show()
+            test.$co.show()
+            // memory1.drugQuestions[memory1.progress]()
+        },
+
+        bindEvents: function(){
+            test.$A_Button.unbind()
+            test.$B_Button.unbind()
+
+            test.var2askOrder = 1 // testing
+
+            if(memory2.progress === 0){
+                if(test.var2askOrder === 0){
+
+                    test.$A_Button.unbind().on('click', function(){
+                        // store judgment
+                        console.log('left button')
+                        memory2.incrementJudgment('A')
+                    })
+                }else{
+                    test.$B_Button.unbind().on('click', function(){
+                        // store judgment
+                        memory2.incrementJudgment('B')
+                    })
+                }
+
+            }else{
+                if(test.var2askOrder === 0){
+                    test.$B_Button.unbind().on('click', function(){
+                        // store judgment
+                        memory2.incrementJudgment('B')
+                    })
+                }else{
+                    test.$A_Button.unbind().on('click', function(){
+                        // store judgment
+                        memory2.incrementJudgment('A')
+                    })
+                }
+            }
+
+        },
+
+        var2aJudgment: function(){
+            // make left side opaque, disable
+            memory2.$var1b_Judgment.css('opacity', '0.2')
+            memory2.$var1b_textInput.prop('disabled', true)
+
+            // make this side not opaque, enable
+            memory2.$var1a_Judgment.css('opacity', '1.0')
+            memory2.$var1a_textInput.prop('disabled', false)
+
+
+            $('#memoryDiv').hide()
+            $('#memoryDiv').show()
+
+        },
+
+        var2bJudgment: function(){
+            // make left side opaque, disable
+            memory2.$var1a_Judgment.css('opacity', '0.2')
+            memory2.$var1a_textInput.prop('disabled', true)
+
+            // make this side not opaque, enable
+            memory2.$var1b_Judgment.css('opacity', '1.0')
+            memory2.$var1b_textInput.prop('disabled', false)
+
+
+            $('#memoryDiv').hide()
+            $('#memoryDiv').show()
+
+        },
+
+        incrementJudgment: function(input){
+            console.log(input)
+            //// // console.log(faceOrder)
+            if(input == 'A'){
+
+                // test.$input_1
+                // test.$input_2
+                // test.$input_3
+                // test.$input_4
+
+                var value_A = test.$input_1.val()
+                var value_B = test.$input_2.val()
+
+                if(test.frequency2 === 1){
+                    var max = 16
+                }else{
+                    var max = 32
+                }
+                console.log(String(max))
+
+                var problems = test.judgmentCheck(value_A = value_A, value_B = value_B, max=max, judgmentType = 1)
+
+            }else if(input == 'B'){
+                var value_A = test.$input_3.val()
+                var value_B = test.$input_4.val()
+
+                if(test.frequency2 === 1){
+                    var max = 32
+                }else{
+                    var max = 16
+                }
+
+                var problems = test.judgmentCheck(value_A = value_A, value_B = value_B, max=max, judgmentType = 1)
+
+            }
+
+            //// console.log('PROBLEMS: '+problems)
+            if(problems != 0){ // if there are problems, alert and return
+                alert(problems)
+                return
+            }
+
+            // if we've made it this far, the value is legit.
+            memory2.loadForm()
+
+            if(memory2.progress < 1){
+                memory2.progress ++
+
+                //// console.log('Rendering')
+                memory2.render()
+                memory2.bindEvents()
+
+            }else{
+                console.log('submitting form')
+                test.sendAjax('memory2')
+                // test.mySubmit()
+            }
+        },
+
+        loadForm: function(){
+            $("#condition").val(test.condition)
+            $('#valence').val(test.valence)
+
+
+
+            if(test.frequency1 === 0){
+                $("#var1a_Rarity").val('Common')
+                $("#var1b_Rarity").val('Rare')
+            }else{
+                $("#var1a_Rarity").val('Rare')
+                $("#var1b_Rarity").val('Common')
+            }
+
+            if(test.frequency2 === 0){
+                $('#var2a_Rarity').val('Common')
+                $('#var2b_Rarity').val('Rare')
+            }else if(test.frequency2 === 1){
+                $('#var2a_Rarity').val('Rare')
+                $('#var2b_Rarity').val('Common')
+            }
+
+            if(test.condition === 'monetary'){
+
+            }else{
+                var color_a = test.var1a_img_src.split('/')[3].split('.')[0]
+                var color_b = test.var1b_img_src.split('/')[3].split('.')[0]
+
+
+                var color = String(test.var1a_color).split('/')
+                color = color[color.length-1].split('.')[0]
+                $("#var1a_Name").val(color)
+
+                var color = String(test.var1b_color).split('/')
+                color = color[color.length-1].split('.')[0]
+                $("#var1b_Name").val(color)
+
+                // drug name
+                $("#leftDrugColor").val(color_a)
+                $("#rightDrugColor").val(color_b)
+
+
+            }
+
+
+
+            $('#var1a_Name').val(test.var1a)
+            $('#var1b_Name').val(test.var1b)
+
+
+            $('#var2a_Name').val(test.var2a)
+            $('#var2b_Name').val(test.var2a)
+
+
+
+
+            // load actual judgments
+            // old method:
+            if(test.frequency1 === 0 & test.frequency2 === 0){
+                $('#mem2_cellA').val($('#input_1').val())
+                $('#mem2_cellB').val($('#input_2').val())
+                $('#mem2_cellC').val($('#input_3').val())
+                $('#mem2_cellD').val($('#input_4').val())
+            }else if(test.frequency1 === 1 & test.frequency2 === 0){
+                $('#mem2_cellA').val($('#input_3').val())
+                $('#mem2_cellB').val($('#input_4').val())
+                $('#mem2_cellC').val($('#input_1').val())
+                $('#mem2_cellD').val($('#input_2').val())
+            }else if(test.frequency1 === 0 & test.frequency2 === 1){
+                $('#mem2_cellA').val($('#input_2').val())
+                $('#mem2_cellB').val($('#input_1').val())
+                $('#mem2_cellC').val($('#input_4').val())
+                $('#mem2_cellD').val($('#input_3').val())
+            }else if(test.frequency1 === 1 & test.frequency2 === 1){
+                $('#mem2_cellA').val($('#input_4').val())
+                $('#mem2_cellB').val($('#input_3').val())
+                $('#mem2_cellC').val($('#input_2').val())
+                $('#mem2_cellD').val($('#input_1').val())
+            }
+            // end old method
+
+
+            // new method:
+            // if(test.position2 === 0){
+
+            $('#var1a_given_var2a').val($('#input_1').val())
+            $('#var1b_given_var2a').val($('#input_2').val())
+            $('#var1a_given_var2b').val($('#input_3').val())
+            $('#var1b_given_var2b').val($('#input_4').val())
+
+            // }else{
+            //     $('#var1b_given_var2b').val($('#input_1').val())
+            //     $('#var1a_given_var2b').val($('#input_2').val())
+            //     $('#var1b_given_var2a').val($('#input_3').val())
+            //     $('#var1a_given_var2a').val($('#input_4').val())
+            //
+            // }
+            // end new method
+
+
+        },
+
+        unbindEvents: function(){
+            //console.log('unbind memory1')
+            // undo everything in event binder
+            test.$A_Button.unbind()
+            test.$B_Button.unbind()
+
+            // hide
+            test.$memory2_div.hide()
+        }
+
+    }
+
+
+    test.init() // testing
+
+
+
+
+
+
+})
+ </script>
+{% endblock %}

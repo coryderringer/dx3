@@ -1,0 +1,62 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+	Ajax Data
+{% endblock %}
+
+{% block bodycontent %}
+<head>
+</head>
+<body>
+
+
+<!-- ########## Data For Each Scenario ########## -->
+<div class="container">
+	ScenarioData:
+
+	<table class="table td">
+
+	<!-- Header Row -->
+	<tr>
+	<th>Usernum</th>
+	<th>Account</th>
+	<th>Trial</th>
+	<th>Correct</th>
+	<th>Guess</th>
+	<th>Time</th>
+	<th>Attention Fails</th>
+	<th>Profit Impact</th>
+
+	</tr>
+
+	<!-- Subsequent Rows -->
+	{% for i in d %}
+	<tr>
+	<th>{{ i.usernum }}</th>
+	<th>{{ i.account }}</th>
+	<th>{{ i.trialNumber }}</th>
+
+	<th>{{ i.trialCorrect }}</th>
+	<th>{{ i.trialGuess }}</th>
+	<th>{{ i.trialTime }}</th>
+	<th>{{ i.attentionFails }}</th>
+	<th>{{ i.profitImpact }}</th>
+
+
+
+	</tr>
+	{% endfor %}
+	</table>
+</div>
+
+
+
+
+
+</body>
+{% endblock %}
+
+
+
+
+

@@ -1,0 +1,422 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+	Scenarios
+{% endblock%}
+
+{% block bodycontent %}
+
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Medication Task</p>
+            </div>
+        </div>
+    </nav>
+
+    <div id="containerDiv" style="width:700px; display: none" class="container well">
+    	<h2>Scenarios:</h2>
+
+    	<p name="story"><span name="firstScenario">You will complete two scenarios, each about a different disease.
+			The diseases are unrelated. In the first scenario,</span><span name="secondScenario">In the next scenario,</span> you will view data about
+			the disease <span name="disease"></span>. Patients
+			<b><span name="freq2a">most often</span> have <span name="var2a">GOOD</span>
+			treatment outcomes for this disease, but
+			<span name="freq2b">sometimes</span> have <span name="var2b">BAD</span> outcomes.</b>. The disease is
+			<b><span name="freq1a">most often</span> treated with
+			<span name="var1a"></span>, but is <span name="freq1b">sometimes</span>
+			treated with <span name="var1b"></span></b>. 
+		</p>
+
+		<p name="monetary" style="display:none"><span name="firstScenario">You will complete two scenarios,
+			each about different shapes. The scenarios are unrelated. In the first
+			scenario,</span><span name="secondScenario">In the next scenario,</span> the shape is <b><span name="freq2a">most often</span> <span name="var2a"></span>, but is <span name="freq2b">sometimes</span> 
+			<span name="var2b"></span></b>. The color is <b><span name="freq1a">most often</span> <span name="var1a"></span>, but is <span name="freq1b">sometimes</span> <span name="var1b"></span></b>.  
+		</p>
+        <br>
+
+		<div class = "text-center">
+            <p name="monetary">To begin, click the <b>most common</b> color and shape.</p>
+			<p name="story">To begin, click the <b>most common</b> drug and outcome.</p>
+			<br>
+            
+			<div class = "row" id="var2Div" style="height:100px">
+				<div class = "col-xs-2 text-center">
+					<p style="position:relative; top:20px">
+						<b name="monetary">Shape:</b>
+						<b name="story">Outcome:</b>
+					</p>
+				</div>
+				<div id="var2a" class="col-xs-4" style="height:100px">
+					<img id="var2aImg" src="/static/images/bad.png" style="height:70px"/>
+					<p><span name="var2a">BAD</span></p>
+				</div>
+				<div class="col-xs-2 text-center"><p style="position:relative; top:30px">or</p></div>
+				<div id="var2b" class="col-xs-4" style="height:100px">
+					<img id="var2bImg" src="/static/images/good.png" style="height:70px"/>
+					<p><span name="var2b">GOOD</span></p>
+				</div>
+            </div>
+
+            <div class = "row" id="var1Div" style="height:100px">
+				<div class = "col-xs-2 text-center">
+                    <p style="position:relative; top:20px">
+						<b name="monetary">Color:</b>
+						<b name="story">Drug:</b>
+					</p>
+                </div>
+				<div id="var1a" class="col-xs-4" style="height:100px">
+					<img id="var1aImg" src="/static/images/blank.png" style="height:40px; position:relative; top:15px"/>
+					<p style="position:relative; top:20px"><span name="var1a">Drug A</span></p>
+				</div>
+				<div class="col-xs-2 text-center"><p style="position:relative; top:30px">or</p></div>
+				<div id="var1b" class="col-xs-4"  style="height:100px">
+					<img id="var1bImg" src="/static/images/blank.png" style="height:40px; position:relative; top:15px"/>
+					<p style="position:relative; top:20px"><span name="var1b">Drug B</span></p>
+				</div>
+            </div>
+
+			<div class="row" style="height:40px">
+				<div class="col-xs-2"></div>
+				<div class="col-xs-9 text-center" style="border-bottom:1px solid"></div>
+				<div class="col-xs-1"></div>
+			</div>
+
+			
+        </div>
+		<br>
+		<div class="row">
+			<div class="col-xs-6"></div>
+			<div class="col-xs-6">
+				<button id="submitButton" style="visibility: hidden">Continue</button>
+			</div>
+		</div>
+
+    </div>
+    <form id="submitForm" method="get" action="/scenario" class="hidden">
+		<input type="submit" value="" class="hidden"/>
+	</form>
+
+
+
+
+
+</div>
+
+<script>
+
+
+
+$(document).ready(function(){
+
+    var main = {
+
+        init: function(){
+			this.condition = '{{condition}}' // monetary or not, for render and bindEvents
+
+			main.scenario = {{scenario}}
+			this.drugNames = ['XF702', 'BT339', 'GS596', 'PR242']
+            this.drugs = {{drugs}}
+
+            this.leftColor = '{{drugColor_Left}}'
+			main.rightColor = '{{drugColor_Right}}'
+
+            main.drugColors = ['/static/images/lightblue.png',
+                '/static/images/darkblue.png',
+                '/static/images/orange.png',
+                '/static/images/purple.png']
+
+			main.leftFace = '/static/images/bad.png'
+			main.rightFace = '/static/images/good.png'
+
+			this.shapeNames = ['SQUARE', 'CIRCLE', 'STAR', 'TRIANGLE', 'OVAL', 'DIAMOND', 'RECTANGLE', 'PENTAGON']
+			this.shapes = {{shapes}}
+
+			main.var1a = '{{var1_Left_Name}}'
+			main.var1b = '{{var1_Right_Name}}'
+			main.var2a = '{{var2_Left_Name}}'
+			main.var2b = '{{var2_Right_Name}}'
+
+			main.imageSources = ['/static/images/square.png',
+                '/static/images/circle.png',
+                '/static/images/star.png',
+                '/static/images/triangle.png',
+                '/static/images/oval.png',
+                '/static/images/diamond.png',
+                '/static/images/rectangle.png',
+                '/static/images/pentagon.png',
+                '/static/images/good.png',
+                '/static/images/bad.png',
+
+                '/static/images/lightblue.pill.png',
+                '/static/images/darkblue.pill.png',
+                '/static/images/orange.pill.png',
+                '/static/images/purple.pill.png',
+
+				'/static/images/red.square.png',
+				'/static/images/purple.square.png',
+				'/static/images/green.square.png',
+				'/static/images/blue.square.png']
+
+			for(var i = 0; i < main.imageSources.length; i++){
+                // 2a
+                if(main.imageSources[i].split('/')[3].split('.')[0] === main.var2a.toLowerCase()){
+                    main.var2a_img_src = main.imageSources[i]
+                }
+                // 2b
+                if(main.imageSources[i].split('/')[3].split('.')[0] === main.var2b.toLowerCase()){
+                    main.var2b_img_src = main.imageSources[i]
+                }
+
+                if(main.condition === 'monetary'){ // only for shapes
+
+                    // 1a
+                    if(main.imageSources[i].toLowerCase().split('/')[3].split('.')[0] === main.var1a.toLowerCase()){
+						if(main.imageSources[i].split('/')[3].split('.')[1] === 'square'){
+							main.var1a_img_src = main.imageSources[i]
+						}
+
+                    }
+                    // 1b
+                    if(main.imageSources[i].toLowerCase().split('/')[3].split('.')[0] === main.var1b.toLowerCase()){
+                        if(main.imageSources[i].split('/')[3].split('.')[1] === 'square'){
+							main.var1b_img_src = main.imageSources[i]
+						}
+                    }
+
+                }else{ // pill colors
+                    // 1a
+                    if(main.imageSources[i].toLowerCase().split('/')[3].split('.')[0] === '{{drugColor_Left}}'.toLowerCase()){
+                        if(main.imageSources[i].split('/')[3].split('.')[1] === 'pill'){
+							main.var1a_img_src = main.imageSources[i]
+						}
+                    }
+
+                    if(main.imageSources[i].toLowerCase().split('/')[3].split('.')[0] === '{{drugColor_Right}}'.toLowerCase()){
+                        if(main.imageSources[i].split('/')[3].split('.')[1] === 'pill'){
+							main.var1b_img_src = main.imageSources[i]
+						}
+                    }
+                }
+            }
+
+            console.log(main.var1a_img_src)
+            console.log(main.var1b_img_src)
+            console.log(main.var2a_img_src)
+            console.log(main.var2b_img_src)
+
+
+			main.position2 = {{position2}} // check that this is used correctly
+			main.frequency1 = {{frequency1}}
+				// if this is 0, common state of var1 in the data (0) is on the left.
+				// if 1, common state is on the right.
+			main.frequency2 = {{frequency2}}
+				// if this is 0, common state of var2 in data (0) is on the left
+				// this interacts with position2 to form our manipulation:
+				// if position2 == 0 & frequency2 == 0: bad on left and the common state is the left (rare-positive)
+				// if position2 == 0 & frequency2 == 1: bad on left and the common state is the right (rare-negative)
+				// if position2 == 1 & frequency2 == 0: good on left and the common state is the left (rare-negative)
+				// if position2 == 1 & frequency2 == 1: good on left and the common state is the right (rare-positive)
+
+
+			// in the monetary condition this just changes the base rate of the second shape.
+
+			if(main.position2 === main.frequency2){
+				main.valence = 'rare-positive'
+			}else{
+				main.valence = 'rare-negative'
+			}
+
+			console.log('frequency1: '+String(main.frequency1))
+			console.log('position2: '+String(main.position2))
+			console.log('frequency2: '+String(main.frequency2))
+			console.log('condition: '+String(main.valence))
+				// rare-positive, but since we're just doing shapes,
+				// the more common state is the one on the left
+
+			main.progressClicks = [0,0]
+
+            main.cacheDOM()
+            main.render()
+            main.bindEvents()
+            $('#containerDiv').show()
+        },
+
+        cacheDOM: function(){
+            main.$diseaseSpans = $('[name="disease"]')
+            main.$drugA_Spans = $('[name="drugA_Name"]')
+            main.$drugB_Spans = $('[name="drugB_Name"]')
+
+			main.$var1a_Spans = $('[name="var1a"]')
+			main.$var1b_Spans = $('[name="var1b"]')
+			main.$var2a_Spans = $('[name="var2a"]')
+			main.$var2b_Spans = $('[name="var2b"]')
+
+            main.$outcomeSpan = $('#outcome')
+
+            main.$leftDrug = $('#leftDrug')
+            main.$rightDrug = $('#rightDrug')
+
+            main.$drugA = $('#drugA')
+            main.$drugB = $('#drugB')
+
+			main.$var1aDiv = $('#var1a')
+			main.$var1bDiv = $('#var1b')
+			main.$var2aDiv = $('#var2a')
+			main.$var2bDiv = $('#var2b')
+
+			// images
+			main.$var1aImg = $('#var1aImg')
+			main.$var1bImg = $('#var1bImg')
+			main.$var2aImg = $('#var2aImg')
+			main.$var2bImg = $('#var2bImg')
+
+            main.$submitForm = $('#submitForm')
+
+			main.$monetary = $('[name="monetary"]')
+			main.$story = $('[name="story"]')
+
+        },
+
+        render: function(){
+			console.log("SCENARIO CHECK: "+String(main.scenario))
+			if(main.scenario === 0){
+				console.log('nope')
+				$('[name="secondScenario"]').hide()
+				$('[name="firstScenario"]').show()
+			}else{
+				console.log('yep')
+				$('[name="firstScenario"]').hide()
+				$('[name="secondScenario"]').show()
+			}
+
+			if(main.condition == 'monetary'){
+				main.$story.hide()
+				main.$monetary.show()
+			}else{
+				main.$monetary.hide()
+				main.$story.show()
+			}
+			// show correct drug labels and colors
+
+			main.$var1a_Spans.text(main.var1a)
+			main.$var1b_Spans.text(main.var1b)
+			main.$var2a_Spans.text(main.var2a)
+			main.$var2b_Spans.text(main.var2b)
+
+			main.$var1aImg.attr('src', main.var1a_img_src)
+			main.$var1bImg.attr('src', main.var1b_img_src)
+			main.$var2aImg.attr('src', main.var2a_img_src)
+			main.$var2bImg.attr('src', main.var2b_img_src)
+
+
+			if(main.frequency1 === 1){
+				$('[name="freq1a"]').text('occasionally')
+				$('[name="freq1b"]').text('most often')
+			}else{
+				$('[name="freq1a"]').text('most often')
+				$('[name="freq1b"]').text('occasionally')
+			}
+
+			if(main.frequency2 === 1){
+				$('[name="freq2a"]').text('occasionally')
+				$('[name="freq2b"]').text('most often')
+			}else{
+				$('[name="freq2a"]').text('most often')
+				$('[name="freq2b"]').text('occasionally')
+			}
+			main.$diseaseSpans.text('{{disease}}')
+
+			main.removeBorder(main.$var1aDiv)
+			main.removeBorder(main.$var1bDiv)
+			main.removeBorder(main.$var2aDiv)
+			main.removeBorder(main.$var2bDiv)
+
+			// fill in spans
+			main.$var1a_Spans.text(main.var1a)
+			main.$var1b_Spans.text(main.var1b)
+			main.$var2a_Spans.text(main.var2a)
+			main.$var2b_Spans.text(main.var2b)
+
+
+
+
+        },
+
+        bindEvents: function(){
+
+			if(main.frequency1 === 0){ // common on left, shape 1
+				main.$var1aDiv.unbind().on('click', function(){
+					// Not sure if we should have this visual feedback, because it essentially gives them one more trial of one combination
+					main.insertBorder(main.$var1aDiv)
+					main.progressClicks[0] = 1
+					main.progressCheck()
+					// alert('shape1a')
+				})
+			}else if(main.frequency1 === 1){ // common on right, shape 1
+				main.$var1bDiv.unbind().on('click', function(){
+					main.insertBorder(main.$var1bDiv)
+					main.progressClicks[0] = 1
+					main.progressCheck()
+					// alert('shape1b')
+				})
+			}
+
+
+			if(main.frequency2 === 0){
+				main.$var2aDiv.unbind().on('click', function(){
+					main.insertBorder(main.$var2aDiv)
+					main.progressClicks[1] = 1
+					main.progressCheck()
+					// alert('shape2a')
+				})
+			}else if(main.frequency2 === 1){
+				main.$var2bDiv.unbind().on('click', function(){
+					main.insertBorder(main.$var2bDiv)
+					main.progressClicks[1] = 1
+					main.progressCheck()
+					// alert('shape2b')
+				})
+			}
+
+			$('#submitButton').unbind().on('click', function(){
+				$('#submitForm').submit()
+				// alert('submitting')
+			})
+
+
+        },
+
+		insertBorder: function(object){
+			object.css('padding', '5px')
+            object.css('border', '5px solid grey')
+            object.css('-moz-border-radius', '20px')
+            object.css('border-radius', '15px')
+        },
+
+        removeBorder: function(object){
+        	object.css('padding', '5px')
+            object.css('border', '5px solid #F5F5F5')
+        },
+
+		progressCheck: function(){
+			if(main.progressClicks[0] === 1 & main.progressClicks[1] === 1){
+				$('#submitButton').css('visibility', 'visible')
+				return
+			}
+		}
+
+	}
+
+    main.init()
+
+
+
+})
+
+</script>
+
+
+{% endblock %}

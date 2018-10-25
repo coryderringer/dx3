@@ -1,0 +1,100 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+	Slider test
+{% endblock%}
+
+{% block bodycontent %}
+
+
+
+
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Medication Task</p>
+            </div>
+        </div>
+    </nav>
+
+    <div id="containerDiv" class="container well" style="width:800px">
+
+        <div id="TemporalDiv">
+            Use the slider below to estimate the day on which you saw this image:
+            <div class="row">
+
+                <div class="col-xs-3"></div>
+                <div class="col-xs-1">
+                    <img src="/static/images/good.png" style="height:40px"/>
+                </div>
+                <div class="col-xs-4">
+                    <div class="rangeContainer">
+                      <div class="rangeDiv colorWhite" id="rangeDiv">
+                        <input type="text" id="range_47" name="range"/>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-xs-1">
+                    <img src="/static/images/bad.png" style="height:40px"/>
+                </div>
+                <div class="col-xs-3"></div>
+            </div>
+            <br><br>
+            <button class="btn btn-default" id="DisableButton">Disable</button>
+            <button class="btn btn-default" id="EnableButton">Enable</button>
+        </div>
+    </div>
+
+</body>
+
+
+<script>
+
+var $range = $("#range_47");
+
+$range.ionRangeSlider({
+    min:-10,
+    max:10,
+    from:0,
+    hide_from_to: true,
+    hide_min_max: true
+})
+
+$rangeData = $range.data('ionRangeSlider')
+
+$('#DisableButton').unbind().on('click', function(){
+    // alert('test')
+    $rangeData.update({disable:true})
+})
+
+$('#EnableButton').unbind().on('click', function(){
+    // alert('test')
+    $rangeData.update({disable:false})
+})
+
+getValue = function(obj){
+    return(obj.val())
+}
+
+// $range.on("change", function () { // this is to change the value of the
+//   var $this = $(this),            // form whenever the slider changes
+//   value = $this.prop("value");
+//   $("#TemporalChoice").val(value)
+// });
+//
+// $range.ionRangeSlider({
+//     type: "single",
+//     min: 1,
+//     max: 24,
+//     from: 12,
+//     prefix: "Day ",
+//     hide_from_to: true,
+//     force_edges:false,
+//     step: 1
+// });
+
+</script>
+
+{% endblock %}

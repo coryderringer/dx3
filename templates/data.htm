@@ -1,0 +1,91 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+	Data Viewer
+{% endblock %}
+
+{% block bodycontent %}
+<head>
+</head>
+<body>
+
+
+<!-- ########## Data For Each Scenario ########## -->
+<div class="container">
+	ScenarioData:
+	<table class="table td">
+
+		<!-- Header Row -->
+		<tr>
+			<th>Usernum</th>
+			<th>Participant ID</th>
+			<th>Scenario</th>
+			<th>condition</th>
+			<th>valence</th>
+
+			<!-- variable names -->
+			<th>var1_Left</th>
+			<th>var1_Right</th>
+			<th>var2_Left</th>
+			<th>var2_Right</th>
+
+			<!-- attention items -->
+			<th>trialTime</th>
+			<th>attentionFails</th>
+			<th>reloads</th>
+
+			<!-- trial info -->
+			<th>trialNumber</th>
+			<th>trialGuess</th>
+			<th>profitImpact</th>
+
+
+
+			<!-- data they saw -->
+			<th>var1_value</th>
+			<th>var2_value</th>
+			<th>frequency1</th>
+			<th>frequency2</th>
+			<th>position2</th>
+
+		</tr>
+
+		<!-- Subsequent Rows -->
+		{% for i in d %}
+		<tr>
+		<th>{{ i.usernum }}</th>
+		<th>{{ i.account }}</th>
+		<th>{{ i.scenario }}</th>
+		<th>{{ i.condition }}</th>
+		<th>{{ i.valence }}</th>
+
+		<th>{{ i.var1_Left }}</th>
+		<th>{{ i.var1_Right }}</th>
+		<th>{{ i.var2_Left }}</th>
+		<th>{{ i.var2_Right }}</th>
+
+		<th>{{ i.trialTime }}</th>
+		<th>{{ i.attentionFails }}</th>
+		<th>{{ i.reloads }}</th>
+
+		<th>{{ i.trialNumber }}</th>
+		<th>{{ i.trialGuess }}</th>
+		<th>{{ i.profitImpact }}</th>
+
+		<th>{{ i.var1_value }}</th>
+		<th>{{ i.var2_value }}</th>
+		<th>{{ i.frequency1 }}</th>
+		<th>{{ i.frequency2 }}</th>
+		<th>{{ i.position2 }}</th>
+
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+
+
+
+
+
+</body>
+{% endblock %}

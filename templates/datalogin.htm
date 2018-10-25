@@ -1,0 +1,35 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+	Enter password
+{% endblock %}
+
+{% block bodycontent %}
+
+<div class="pg">
+	<p>Enter password to view data</p>
+	<form method="post" action="/data">
+		<select id="whichPage" name="whichPage">		
+			<option value="user">User</option>
+			<option value="scenario">Scenario</option>
+			<option value="memoryTest">Final Judgment Data</option>
+		</select>
+		<input type="password" id="password" name="password">
+		<input type="submit" name="Submit">
+	</form>
+</div>
+
+<script>
+
+$(document).ready(function(){
+	$('#password').focus();
+	$('#password').keydown(function(e){
+		if(e.keyCode == 13){
+			$('#password').submit();
+		}
+	});
+})
+
+</script>
+
+{% endblock %}

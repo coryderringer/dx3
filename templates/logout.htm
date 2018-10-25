@@ -1,0 +1,82 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+	Debrief
+{% endblock %}
+
+{% block bodycontent %}
+
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+	<!-- Navbar -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<p class="navbar-text">Debrief</p>
+			</div>
+		</div>
+	</nav>
+	<!-- Display instructions in well -->
+	<div id= "container" style="width:800px" class="container well">
+
+		<h1>Thank you!</h1>
+
+		<p>Thank you for participating in this experiment. <b>Your earnings total is <span id="bonusAmount">EARNINGS</span>. Your completion code is {{code}}.</b></p>
+
+		<br>
+		<h3>What is the goal of this experiment?</h3>
+		<p>Previous studies have shown that people sometimes infer correlations between uncorrelated variables. This tendency (called “illusory correlation”) has been replicated frequently in the social psychology literature on stereotyping (e.g., Hamilton & Gifford, 1976; Kutzner, Vogel, Freytag, & Fiedler, 2011). In a typical study in this area, participants are given information about two variables such as a trait and a social group, and they tend to infer a correlation between the rare trait and the small group even when the two variables are unrelated.</p>
+
+		<p>A fairly consistent finding in this literature is that people infer stronger illusory correlations between the smaller group and the rare trait if the rare trait is negative rather than positive (Mullen & Johnson, 1990).</p>
+
+		<p>The current experiment attempts to extend this finding into non-social domains; do people display the same tendency to infer illusory correlations when neither of the variables corresponds to a group of people? If so, are these illusory correlations stronger when one of the variables involves a negative outcome (some kind of loss) compared to a positive outcome (some kind of gain)?</p>
+
+		<br>
+		<h3>Why is this topic important?</h3>
+		<p>Illusory correlations have traditionally been one approach to studying stereotype formation, which is important in its own right. However, changing the domain from social to more economical (e.g., gains and losses) changes the nature of the work’s importance. While this study can indirectly tell us something about stereotype formation (whether social stereotyping is a result of broader errors in learning processes, or represents its own unique process), its primary importance is probably in the area of financial judgment and decision-making. If people perceive illusory correlations more readily when they stand to lose money, this has implications for various financial decisions such as whether and how we choose to invest money.</p>
+
+		<br>
+		<h3>Where can I learn more about illusory correlation?</h3>
+		<p>The following articles provide some background about this topic:</p>
+		<ul>
+			<li>Hamilton, D. L., & Gifford, R. K. (1976). Illusory correlation in interpersonal perception: A cognitive basis of stereotypic judgments. <i>Journal of Experimental Social Psychology, 12</i>(4), 392-407. doi: 10.1016/s0022-1031(76)80006-6</li>
+			<li>Kutzner, F., Vogel, T., Freytag, P., & Fiedler, K. (2011a). A robust classic: Illusory correlations are maintained under extended operant conditioning. <i>Experimental Psychology, 58</i>(6), 443–453. doi: 10.1027/1618-3169/a000112</li>
+			<li>Mullen, B. and Johnson, C. (1990), Distinctiveness-based illusory correlations and stereotyping: A meta-analytic integration. <i>British Journal of Social Psychology, 29</i>, 11–28. doi: 10.1111/j.2044-8309.1990.tb00883.x</li>
+			<li>Kahneman, D., & Tversky, A. (1979). Prospect theory: An analysis of decision under risk. <i>Econometrica, 47</i>(2), 263–292. doi: 10.2307/1914185</li>
+		</ul>
+
+		<br>
+		<h3>Contact info for investigators:</h3>
+		<p>If you have further questions about the study, feel free to contact Cory Derringer (cjd78@pitt.edu) or Dr. Benjamin Rottman (rottman@pitt.edu).</p>
+
+		<p><b>Please do not share this information.</b> It is very important for the integrity of this experiment that our participants do not know our hypotheses ahead of time. To protect against this, please do not share this document with anyone else.</p>
+	</div>
+</body>
+<script>
+
+$(document).ready(function(){
+	bonus = {{bonus}}
+
+	function creditRender(credits){
+	    // display credits div
+	    if(credits % 100 == 0){
+	        var displayCredits = String(credits/100) + '.00';
+	    }else if(credits %10 == 0){
+	        displayCredits = String(credits/100) +'0';
+	    }else{
+	        displayCredits = credits/100;
+	    }
+	    return(displayCredits);
+	    // $creditSpan.html(displayCredits);
+	}
+
+	if(bonus < 0){
+		$('#bonusAmount').text('$'+creditRender(0))		
+	}else{
+		$('#bonusAmount').text('$'+creditRender(bonus))	
+	}
+
+})
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+	Ajax Data
+{% endblock %}
+
+{% block bodycontent %}
+<head>
+</head>
+<body>
+
+
+<!-- ########## Data For Each Scenario ########## -->
+<div class="container">
+	Final Judgment Data:
+
+	<table class="table td">
+
+	<!-- Header Row -->
+	<tr>
+		<th>Usernum</th>
+		<th>Account</th>
+		<th>Scenario</th>
+		<th>Valence</th>
+		<th>Condition</th>
+
+		<th>var1_Left</th>
+		<th>var1_Right</th>
+		<th>var2_Left</th>
+		<th>var2_Right</th>
+
+
+		<th>drugColor_Left</th>
+		<th>drugColor_Right</th>
+
+		<th>frequency1</th>
+		<th>frequency2</th>
+		<th>position2</th>
+
+		<th>var2a_given_var1a</th>
+		<th>var2b_given_var1a</th>
+		<th>var2a_given_var1b</th>
+		<th>var2b_given_var1b</th>
+
+		<th>var1a_given_var2a</th>
+		<th>var1b_given_var2a</th>
+		<th>var1a_given_var2b</th>
+		<th>var1b_given_var2b</th>
+
+		<th>causalJudgment</th>
+		<th>testOrder</th>
+
+	</tr>
+
+	<!-- Subsequent Rows -->
+	{% for i in t %}
+	<tr>
+		<th> {{ i.usernum }}</th>
+		<th> {{ i.account }}</th>
+		<th> {{ i.scenario }}</th>
+		<th> {{ i.valence }}</th>
+		<th> {{ i.condition }}</th>
+		<th> {{ i.var1_Left }}</th>
+		<th> {{ i.var1_Right }}</th>
+		<th> {{ i.var2_Left }}</th>
+		<th> {{ i.var2_Right }}</th>
+		<th> {{ i.drugColor_Left }}</th>
+		<th> {{ i.drugColor_Right }}</th>
+		<th> {{ i.frequency1 }}</th>
+		<th> {{ i.frequency2 }}</th>
+		<th> {{ i.position2 }}</th>
+		<th> {{ i.var2a_given_var1a }}</th>
+		<th> {{ i.var2b_given_var1a }}</th>
+		<th> {{ i.var2a_given_var1b }}</th>
+		<th> {{ i.var2b_given_var1b }}</th>
+		<th> {{ i.var1a_given_var2a }}</th>
+		<th> {{ i.var1b_given_var2a }}</th>
+		<th> {{ i.var1a_given_var2b }}</th>
+		<th> {{ i.var1b_given_var2b }}</th>
+		<th> {{ i.causalJudgment }}</th>
+		<th> {{ i.testOrder }}</th>
+
+	</tr>
+	{% endfor %}
+	</table>
+</div>
+
+
+
+
+
+</body>
+{% endblock %}

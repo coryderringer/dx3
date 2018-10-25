@@ -1,0 +1,61 @@
+{% extends "_base.htm" %}
+{% block title %}
+	Welcome!
+{% endblock%}
+
+{% block bodycontent %}
+
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+
+	<!-- Navbar -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<p class="navbar-text">Welcome!</p>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Qualify text -->
+	<section id="note">
+		<div id="contentDiv" style="display:none" class="container well">
+			<h1>You qualify! Accept the HIT now.</h1>
+			<p>Please accept the HIT now before continuing, otherwise it is possible that the HIT will be taken.</p>
+			<p id="purpose"></p><br>
+			<p><b>IMPORTANT: While using this site, never reload or use the "back" button!</b> If you reload the page or use the "back" button, you may lose your bonus!</p>
+			<form method="get" action="/instructions" class="form-inline">
+				<div class="form-group">
+					<input type="submit" value="Begin the study" class="btn btn-primary"/>
+				</div>
+			</form>
+
+		</div>
+
+	</section>
+
+</body>
+
+<script>
+
+
+$(document).ready(function(){
+	var condition = '{{condition}}'
+	console.log(condition)
+	// change purpose depending on condition
+	if(condition != 'monetary'){
+		$('#purpose').text('Welcome to the study! In this study, we are interested in how people learn about medications.')
+	}else{
+		$('#purpose').text('Welcome to the study! In this study, we are interested in how people learn about visual cues.')
+	}
+
+
+
+	$('#contentDiv').show()
+
+});
+
+</script>
+
+
+
+{% endblock %}

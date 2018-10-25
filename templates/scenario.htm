@@ -1,0 +1,1080 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+    Learning Task
+{% endblock%}
+
+{% block bodycontent %}
+
+<!-- happy: &#x1F600 -->
+<!-- sad: &#x1F922 -->
+
+<!-- TODOS: put in sliders for data, switch sides for slider faces when you need to-->
+
+
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text" name="story" style="display:none">Medication Task</p>
+                <p class="navbar-text" name="monetary" style="display:none">Shape Task</p>
+            </div>
+        </div>
+    </nav>
+
+
+    <div id="containerDiv" style="width:800px; display: none" class="container well">
+        <div class="section">
+            <div class="row" id="taskDisplay">
+                <div class="col-xs-8" class="text-center">
+                    <div id="effectDiv" class="text-center">
+                        <h2><span name="story">Patient Number <span name="patientNumber">1</span></span>
+                            <span name="monetary">Trial Number <span name="patientNumber">1</span></span>
+                        </h2>
+                        <!-- find a place for the patient impact info here -->
+                        <div>
+                            <p name="story">The patient's outcome was <span name="outcomeSpan">BAD</span>.</p>
+                            <p name="monetary">Shape is <span id="var2_feedback">SHAPE NAME</span>.</p>
+                        </div>
+
+                        <div class="text-center" style="height:100px; border-bottom: 1px solid grey"> <!-- this is the div that we want split up vertically -->
+                            <div class="col-xs-4"></div>
+                            <div class="col-xs-4 text-center">
+                                <div id="var2_outcome">
+                                    <img id="var2_outcome_image" src="/static/images/blank.png" style="height:70px"/>
+                                </div>
+
+                            </div>
+
+                            <!-- <div id="outcomePercentageText" class="col-xs-4 text-left">
+                                <p style="font-size: 14pt"><span id="outcomePercentageSpan">-3 cents!</span></p>
+                            </div> -->
+
+                        </div>
+
+
+                        <p id="v2_Prompt">
+                            <span name="story">Was the patient's outcome <span name="var2a">GOOD</span> or <span name="var2b">BAD</span>?</span>
+                            <span name="monetary">Was the shape <span name="var2a">SHAPE NAME 1</span> or <span name="var2b">SHAPE NAME 2</span>?</span>
+                        </p>
+
+
+                        <div id="effectClick" class="row">
+
+                            <div id="var2a" class="col-xs-5">
+                               
+                                <div id="var2a_Click">
+                                    <img name="var2a_image" src="/static/images/blank.png" style="height:70px"/>
+                                    <p id="var2a_outcome_text">+1 cents!</p>
+                                </div>
+                                    
+                            
+                            </div>
+                            <div id="leftBorderDiv" class="col-xs-1" style="border-right: 1px solid black; height:70px"></div>
+                            <div id="rightBorderDiv" class="col-xs-1"></div>
+
+                            <div id="var2b" class="col-xs-5">
+                                <div id="var2b_Click" style="height:100px">
+                                    <img name="var2b_image" src="/static/images/blank.png" style="height:70px"/>
+
+                                    <p id="var2b_outcome_text">+1 cents!</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                   
+                    <div id="causeDiv" class = "text-center">
+                        <p id="v1_Prompt">
+                            <span name="story">Guess whether the patient received <span name="var1a">Drug A</span> or <span name="var1b">Drug B</span>?</span>
+                            <span name="monetary">Guess whether the color will be <span name="var1a">SHAPE NAME 1</span> or <span name="var1b">SHAPE NAME 2</span>:</span>
+                        </p>
+                        <br>
+                        <div class = "row" id="pillDiv">
+                            <div id="var1a" class="col-xs-5 text-center">
+                                <p><span name="var1a">Drug A</span></p>
+                                <img name="var1a_image" src="/static/images/blank.png" style="width:100px"/>
+                                <p id="continue_Left" style="visibility:hidden">Click to Continue</p>
+                            </div>
+                            <div class = "col-xs-2 text-center">
+                                <div id="feedbackDiv" class="text-center" style="font-size: 10pt; padding:0px">
+                                    <span id="feedbackSpan" style="position:relative; top:40px"></span>
+                                </div>
+                            </div>
+                            <div id="var1b" class="col-xs-5 text-center">
+                                <p><span name="var1b">Drug B</span></p>
+                                <img name="var1b_image" src="/static/images/blank.png" style="width:100px"/>
+                                <p id="continue_Right" style="visibility:hidden">Click to Continue</p>
+
+                            </div>
+                        </div>
+
+
+
+
+
+                        <!-- <div style="height:20px"></div>
+                        <div id="feedbackButtonDiv" style="visibility: hidden">
+                            <button id="feedbackButton">Next</button>
+                        </div> -->
+                    </div>
+                </div>
+                <div id="scoreDiv" class="col-xs-4 text-center">
+
+                    <p><b>Current Bonus:</b></p>
+                    <div id="totalBonusDiv" class="scoreDisplay">
+                        <span id="totalBonusSpan"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+
+        <!-- ajax form to send tbt data to datastore -->
+        <form id="dataform" method="post" action=
+        "/task">
+            <input id="timeInput" name="timeInput" type="hidden">
+            <input id="attentionFailsInput" name="attentionFailsInput" type="hidden">
+            <input id="trialInput" name="trialInput" type="hidden">
+            <input id="guessInput" name="guessInput" type="hidden">
+            <input id="correctInput" name="correctInput" type="hidden">
+            <input id="valenceInput" name="valenceInput" type="hidden">
+            <input id="profitImpactInput" name="profitImpactInput" type="hidden">
+            <input id="runningBonusInput" name="runningBonusInput" type="hidden">
+            <input id="trialNumberInput" name="trialNumberInput" type="hidden">
+            <input id="reloadsInput" name="reloadsInput" type="hidden">
+            <input id="var1_value" name="var1_value" type="hidden">
+            <input id="var2_value" name="var2_value" type="hidden">
+
+
+
+                <!-- data[13] -->
+            <input id="Submit" onclick="mySubmit()" value="Submit" type="hidden">
+        </form>
+
+        <!-- form to advance to final judgments -->
+        <form id="submitForm" method="post" action="/scenario" class="hidden">
+            <input type = "hidden" id="BonusInput2" name="BonusInput2">
+            <input type="submit" value="" class="hidden"/>
+        </form>
+
+    </div>
+
+    <!-- <p>TOTAL TRIALS: <span id="trialsTest"></span></p> -->
+
+
+
+
+
+</body>
+
+
+
+
+
+
+<script>
+
+// NOTE:
+// var1 is the second row (it's the drug in the story conditions)
+// var2 is always the first row (it's the outcome in the story conditions)
+
+$(document).ready(function(){
+
+
+    var main = {
+
+        init: function(){
+            // MAKE SURE "0" in the v2 data is always bad
+            main.test = 0
+            // variables
+            if({{trialNumber}} == 0){
+                main.trialNumber = 0
+            }else{
+                main.trialNumber = {{trialNumber}} + 1
+            }
+            
+
+            main.condition = '{{condition}}' // gain/loss
+            main.storyCondition = '{{storyCondition}}' // monetary/story/combined
+
+            
+            main.rewardAmount = {{rewardAmount}}
+        
+            
+            // testing:
+            main.position2 = {{position2}}// if 0, left is bad. if 1, left is good
+            main.frequency2 = {{frequency2}} // if 0, mostly bad
+            main.frequency1 = {{frequency1}}
+            // main.frequency1 = 0 // testing
+
+            if(main.position2 === main.frequency2){
+                main.valence = 'rare-positive'
+            }else{
+                main.valence = 'rare-negative'
+            }
+
+            // console.log('VALENCE: '+main.valence)
+            // track number of reloads
+            if(main.trialNumber == 0){
+                main.reloads = {{reloads}}
+            }else{
+                main.reloads = {{reloads}}+1
+            }
+
+            main.lengthOfData = 48
+
+            if(main.trialNumber >= main.lengthOfData){
+                main.mySubmit()
+            }
+
+            main.accuracyBonusAmt = 3
+            main.drugNames = ['XF702', 'BT339', 'GS596', 'PR242']
+            // main.drugs = {{drugs}}
+
+            // main.shapes = {{shapeNames}}
+
+            main.imageSources = ['/static/images/square.png',
+                '/static/images/circle.png',
+                '/static/images/star.png',
+                '/static/images/triangle.png',
+                '/static/images/oval.png',
+                '/static/images/diamond.png',
+                '/static/images/rectangle.png',
+                '/static/images/pentagon.png',
+                '/static/images/good.png',
+                '/static/images/bad.png',
+
+                '/static/images/lightblue.pill.png',
+                '/static/images/darkblue.pill.png',
+                '/static/images/orange.pill.png',
+                '/static/images/purple.pill.png',
+
+				'/static/images/red.square.png',
+				'/static/images/purple.square.png',
+				'/static/images/green.square.png',
+				'/static/images/blue.square.png']
+
+            main.var1a = '{{var1_Names_Left}}'
+            main.var1b = '{{var1_Names_Right}}'
+            main.var2a = '{{var2_Names_Left}}'
+            main.var2b = '{{var2_Names_Right}}'
+
+
+
+
+
+
+            for(var i = 0; i < main.imageSources.length; i++){
+                // 2a
+                if(main.imageSources[i].split('/')[3].split('.')[0] === main.var2a.toLowerCase()){
+                    main.var2a_img_src = main.imageSources[i]
+                }
+                // 2b
+                if(main.imageSources[i].split('/')[3].split('.')[0] === main.var2b.toLowerCase()){
+                    main.var2b_img_src = main.imageSources[i]
+                }
+
+                if(main.condition === 'monetary'){ // square colors
+
+                    // 1a
+                    if(main.imageSources[i].toLowerCase().split('/')[3].split('.')[0] === main.var1a.toLowerCase()){
+						console.log('found var1a')
+                        if(main.imageSources[i].split('/')[3].split('.')[1] === 'square'){
+                            main.var1a_img_src = main.imageSources[i]
+                            console.log('assigned var1a: '+main.var1a_img_src)
+						}
+
+                    }
+                    // 1b
+                    if(main.imageSources[i].toLowerCase().split('/')[3].split('.')[0] === main.var1b.toLowerCase()){
+                        console.log('found var1b')
+                        if(main.imageSources[i].split('/')[3].split('.')[1] === 'square'){
+							main.var1b_img_src = main.imageSources[i]
+                            console.log('assigned var1b: '+main.var1b_img_src)
+						}
+                    }
+                }else{ // pill colors
+                    // 1a
+                    if(main.imageSources[i].toLowerCase().split('/')[3].split('.')[0] === '{{drugColor_Left}}'.toLowerCase() ) {
+                        if(main.imageSources[i].split('/')[3].split('.')[1] === 'pill'){
+                            main.var1a_img_src = main.imageSources[i]
+                        }
+                    }
+
+                    if(main.imageSources[i].toLowerCase().split('/')[3].split('.')[0] === '{{drugColor_Right}}'.toLowerCase()){
+                        if(main.imageSources[i].split('/')[3].split('.')[1] === 'pill'){
+                            main.var1b_img_src = main.imageSources[i]
+                        }
+                    }
+                }
+            }
+
+      
+
+
+            // main.position1 denotes whether the left and right drug/shape (var1) are switched (1) or not (0).
+            // main.frequency1 denotes whether the left (0) or right (1) drug is more common.
+
+            main.v1_Data = {{v1_Data}}
+            main.v2_Data = {{v2_Data}}
+
+            main.scenario = {{scenario}}
+
+            main.assets = {{bonus}}
+            
+            main.guesses = new Array()
+            main.attentionFails = 0 // resets every trial
+
+
+
+            // cache DOM
+            main.cacheDOM()
+            main.cacheDOM()
+
+            // bind events (effect only)
+            main.bindEvents(0)
+
+            // render page
+            main.render('reset')
+            main.getTrialStartTime()
+        },
+
+
+        cacheDOM: function(){
+
+
+
+
+
+            // this function saves the DOM searches, so we only have to search the DOM once.
+
+            main.$co = $('#containerDiv') // container div
+            main.$storyDiv = $('[name="story"]')
+            main.$monetaryDiv = $('[name="monetary"]')
+
+            main.$patientImpact = main.$co.find('#patientImpact')
+            // main.$treatmentBonusSpan = main.$co.find('#treatmentBonusSpan')
+            // main.$accuracyBonusSpan = main.$co.find('#accuracyBonusSpan')
+            main.$totalBonusSpan = main.$co.find('#totalBonusSpan')
+
+            main.$var2_outcome = main.$co.find('#var2_outcome')
+            // main.$choiceRow = main.$co.find('#choiceRow')
+            main.$outcomeSpans = main.$co.find('span[name=outcomeSpan]')
+            main.$outcomePercentageSpan = main.$co.find('#outcomePercentageSpan')
+
+            main.$var1a_Spans = $('span[name=var1a]')
+            main.$var1b_Spans = $('span[name=var1b]')
+            main.$var2a_Spans = $('span[name=var2a]')
+            main.$var2b_Spans = $('span[name=var2b]')
+
+            main.$leftDrug = main.$co.find('#leftDrug')
+            main.$rightDrug = main.$co.find('#rightDrug')
+
+            // // the actual sliders
+            // main.$leftRange = main.$co.find('#leftRange')
+            // main.$rightRange = main.$co.find('#rightRange')
+            //
+            // // the slider containers
+            // main.$rangeLeft = main.$co.find('#rangeLeft')
+            // main.$rangeRight = main.$co.find('#rangeRight')
+
+            main.$feedbackDiv = main.$co.find('#feedbackDiv')
+            main.$feedbackSpan = main.$co.find('#feedbackSpan')
+            // main.$feedbackButton = main.$co.find('#feedbackButton')
+            // main.$feedbackButtonDiv = main.$co.find('#feedbackButtonDiv')
+
+            main.$buttonRow = main.$co.find('#buttonRow')
+            main.$displayDiv = main.$co.find('#displayDiv')
+            main.$effectImage = main.$co.find('#effectImage')
+
+            // main.$effectiveEmoji = main.$co.find('#effectiveEmoji')
+            // main.$ineffectiveEmoji = main.$co.find('#ineffectiveEmoji')
+
+            // spans
+            main.$patientNumber = main.$co.find('span[name=patientNumber]')
+
+            // form
+            main.$timeInput = main.$co.find('#timeInput')
+            main.$attentionFailsInput = main.$co.find('#attentionFailsInput')
+            main.$trialInput = main.$co.find('#trialInput')
+            main.$guessInput = main.$co.find('#guessInput')
+            main.$correctInput = main.$co.find('#correctInput')
+            main.$profitImpactInput = main.$co.find('#profitImpactInput')
+            main.$trialNumberInput = main.$co.find('#trialNumberInput')
+            main.$reloadsInput = main.$co.find('#reloadsInput')
+            main.$dataform = main.$co.find('#dataform')
+
+            main.$causeDiv = main.$co.find('#causeDiv')
+
+            main.$feedbackDrugName = main.$co.find('#feedbackDrugName')
+            main.$var1a = main.$co.find('#var1a')
+            main.$var1b = main.$co.find('#var1b')
+            main.$v1_Prompt = main.$co.find('#v1_Prompt')
+
+
+            main.effectDiv = main.$co.find('#effectDiv')
+            main.$patientImpact = main.$co.find('#patientImpact')
+            main.$outcomeSpans = main.$co.find('span[name=outcomeSpan]')
+            main.$outcomePercentageSpan = main.$co.find('#outcomePercentageSpan')
+            // main.$feedbackButton = main.$co.find('#feedbackButton')
+            main.$effectClick = main.$co.find('#effectClick') // this is the whole bottom left div
+            main.$v2_Prompt = main.$co.find('#v2_Prompt')
+
+
+            // "buttons"
+            main.$var2a = main.$co.find('#var2a_Click')
+            main.$var2b = main.$co.find('#var2b_Click')
+
+            main.$var1aDiv = main.$co.find('#var1a')
+            main.$var1bDiv = main.$co.find('#var1b')
+            main.$var2aDiv = main.$co.find('#var2a')
+            main.$var2bDiv = main.$co.find('#var2b')
+
+            // images
+            main.$var1a_image = main.$co.find('[name="var1a_image"]')
+            main.$var1b_image = main.$co.find('[name="var1b_image"]')
+            main.$var2a_image = main.$co.find('[name="var2a_image"]')
+            main.$var2b_image = main.$co.find('[name="var2b_image"]')
+
+            
+
+
+
+        },
+
+        render: function(stage){
+            // This function hides and shows things as appropriate.
+            // This should be the only function that interacts with the visual elements of the page.
+            // The 'stage' argument refers to progress within a trial.
+
+            if(main.storyCondition == 'monetary'){
+                main.$storyDiv.hide()
+                main.$monetaryDiv.show()
+            }else{
+                main.$monetaryDiv.hide()
+                main.$storyDiv.show()
+            }
+
+            main.$var1a_Spans.text(String(main.var1a))
+            main.$var1b_Spans.text(String(main.var1b))
+            main.$var2a_Spans.text(String(main.var2a))
+            main.$var2b_Spans.text(String(main.var2b))
+
+
+            if(stage == 'reset'){ // new trial
+                
+
+                ////// // console.log('render reset')
+                // Patient Number
+
+                // remove borders from prev trial
+                main.$patientNumber.text(main.trialNumber+1)
+                main.removeBorder(main.$var1a)
+                main.removeBorder(main.$var1b)
+                main.removeBorder(main.$var2a)
+                main.removeBorder(main.$var2b)
+                $('#var2a_outcome_text').css('visibility', 'hidden')
+                $('#var2b_outcome_text').css('visibility', 'hidden')
+                $('#continue_Left').css('visibility', 'hidden')
+                $('#continue_Right').css('visibility', 'hidden')
+
+
+                // effect div
+                main.$v2_Prompt.css('opacity', '1.0')
+                main.$var2a.css('opacity', '1.0')
+                main.$var2b.css('opacity', '1.0')
+
+                if(main.storyCondition == 'monetary'){
+                    main.$var1a_image.attr('src', main.var1a_img_src).css('width', '55px')
+                    main.$var1b_image.attr('src', main.var1b_img_src).css('width', '55px')
+                }else{
+                    main.$var1a_image.attr('src', main.var1a_img_src).css('width', '100px')
+                    main.$var1b_image.attr('src', main.var1b_img_src).css('width', '100px')
+                }
+
+                main.$var2a_image.attr('src', main.var2a_img_src)
+                main.$var2b_image.attr('src', main.var2b_img_src)
+
+
+                // cause div
+                main.$causeDiv.css('opacity', '0.2')
+                main.$var1a.css('opacity', '1.0')
+                main.$var1b.css('opacity', '1.0')
+                main.$v1_Prompt.css('opacity', '1.0')
+                main.$feedbackDiv.css('visibility', 'hidden')
+                // main.$feedbackButtonDiv.css('visibility', 'hidden')
+
+
+                // console.log('outcome: '+main.v2_Data[main.trialNumber])
+                // 0 is always bad
+                // if position2 === 0, left is bad, and 0 is left
+                // don't have to worry about frequency2 *visually*; it's just about rarity (done in Python)
+
+                if(main.position2 === 0){ // left is bad (0 is always bad)
+                    if(main.v2_Data[main.trialNumber] > 0){ // good outcome, so right image
+                        $('#var2_outcome_image').attr('src', main.var2b_img_src)
+                        $('#var2_feedback').text(main.var2b)
+                        main.$outcomeSpans.text('GOOD')
+                        $('#var2_value').val(main.var2b)
+                        
+                        
+
+                    }else{ // bad outcome, so left image
+                        $('#var2_outcome_image').attr('src', main.var2a_img_src)
+                        $('#var2_feedback').text(main.var2a)
+                        main.$outcomeSpans.text('BAD')
+                        $('#var2_value').val(main.var2a)
+                        
+                    }
+
+                }else{ // right is bad (0 is always bad)
+                    if(main.v2_Data[main.trialNumber] > 0){ // good outcome, so left image
+                        $('#var2_outcome_image').attr('src', main.var2a_img_src)
+                        $('#var2_feedback').text(main.var2a)
+                        main.$outcomeSpans.text('GOOD')
+                        $('#var2_value').val(main.var2a)
+                        
+
+                    }else{ // bad outcome, so left image
+                        $('#var2_outcome_image').attr('src', main.var2b_img_src)
+                        $('#var2_feedback').text(main.var2b)
+                        main.$outcomeSpans.text('BAD')
+                        $('#var2_value').val(main.var2b)
+                        
+                    }
+                }
+
+
+            }else if(stage == 'guess'){
+
+                console.log('render guess')
+
+                if(main.v2_Data[main.trialNumber] === 0){ // if it's a BAD outcome
+                    
+                    if(main.position2 === 0){ // if bad outcomes are on the left
+                        // it's a bad outcome on the left
+                        main.$var2b.css('opacity', '0.2')
+                        main.insertBorder(main.$var2a)
+                        if(main.condition == 'loss'){
+                            $('#var2a_outcome_text').text('-6 cents!').css('visibility', 'visible')
+                        }
+
+                    }else{
+                        // it's a bad outcome on the right
+                        main.$var2a.css('opacity', '0.2')
+                        main.insertBorder(main.$var2b)    
+                        if(main.condition == 'loss'){
+                            $('#var2b_outcome_text').text('-6 cents!').css('visibility', 'visible')
+                        }
+                    }
+                    
+                }else{ // if it's a GOOD outcome
+                    
+                    if(main.position2 === 0){ // if bad outcomes are on the left
+                        // it's a good outcome on the right
+                        main.$var2a.css('opacity', '0.2')
+                        main.insertBorder(main.$var2b)
+                        if(main.condition == 'gain'){
+                            $('#var2b_outcome_text').text('+6 cents!').css('visibility', 'visible')  
+                        }
+                    }else{
+                        // it's a good outcome on the left
+                        main.$var2b.css('opacity', '0.2')
+                        main.insertBorder(main.$var2a)
+                        if(main.condition == 'gain'){
+                            $('#var2a_outcome_text').text('+6 cents!').css('visibility', 'visible')  
+                        }
+                    }
+                    
+                }
+             
+
+                main.$v2_Prompt.css('opacity', '0.2')
+
+                // // kind of sloppy, these should probably just be their own div
+                // main.$rangeLeft.css('opacity', '0.2')
+                // main.$rangeRight.css('opacity', '0.2')
+
+                main.$causeDiv.css('opacity', '1.0')
+
+
+
+
+
+
+            }else if(stage == 'feedback'){
+                ////// // console.log('render feedback')
+                main.$v1_Prompt.css('opacity', '0.25')
+                // main.$leftRange.css('opacity', '1.0')
+                // main.$rightRange.css('opacity', '1.0')
+                // opacity to .25 for the incorrect answer
+                if(main.v1_Data[main.trialNumber] == 0){ // 0 is A for v1
+                    main.$feedbackDrugName.text(main.var1a)
+                    main.$var1b.css('opacity', '0.25')
+
+                    // render borders
+                    main.insertBorder(main.$var1a)
+
+
+                    // feedback text
+                    if(main.guesses[main.guesses.length-1] == main.var1a){ // correctly guess A
+                        main.$feedbackSpan.html('Correct!<br>+3 cents!')
+                        $('#continue_Left').css('visibility', 'visible')
+                    }else{ // incorrectly guess B
+                        main.$feedbackSpan.html('Incorrect!')
+                        $('#continue_Left').css('visibility', 'visible')
+                    }
+
+                }else{
+                    main.$feedbackDrugName.text(main.var1b)
+                    main.$var1a.css('opacity', '0.25')
+
+                    // render borders
+                    main.insertBorder(main.$var1b)
+
+                    // feedback text
+                    if(main.guesses[main.guesses.length-1] == main.var1b){
+                        main.$feedbackSpan.html('Correct!<br>+3 cents!')
+                        $('#continue_Right').css('visibility', 'visible')
+                    }else{
+                        main.$feedbackSpan.html('Incorrect!')
+                        $('#continue_Right').css('visibility', 'visible')
+                    }
+                }
+                main.$feedbackDiv.css('visibility', 'visible')
+            
+                
+               
+            }
+
+            if(main.assets < 0){
+                main.$totalBonusSpan.text('-$'+main.creditRender(Math.abs(main.assets)))
+            }else{
+                main.$totalBonusSpan.text('$'+main.creditRender(main.assets))
+            }
+
+
+            main.$co.show()
+        },
+
+        creditRender: function(credits){
+            // this function takes a number in cents and converts it to dollars
+
+            // main.creditRender(6) -> 0.06
+            // main.creditRender(100) -> 1.00
+
+            // display credits div
+            if(credits % 100 == 0){
+                var displayCredits = String(credits/100) + '.00';
+            }else if(credits %10 == 0){
+                displayCredits = String(credits/100) +'0';
+            }else{
+                displayCredits = credits/100;
+            }
+            return(displayCredits);
+            // $creditSpan.html(displayCredits);
+        },
+
+        bindEvents: function(stage){
+            // this function specifies which objects are "listening" for events to happen at which times.
+
+            if(stage == 0){
+                main.$var2a.unbind().on('click', main.var2a_Click)
+                main.$var2b.unbind().on('click', main.var2b_Click)
+            }else if(stage == 1){
+                main.$var2a.unbind()
+                main.$var2b.unbind()
+                main.$var1a.unbind().on('click', main.var1a_Function)
+                main.$var1b.unbind().on('click', main.var1b_Function)
+            }else{
+
+                if(main.$correctInput.val() === main.var1a){
+                    main.$var1a.unbind().on('click', main.newTrial)
+                    main.$var1b.unbind()
+                }else{
+                    // if the right is correct
+                    main.$var1b.unbind().on('click', main.newTrial)
+                    main.$var1a.unbind()
+                }
+
+
+
+
+            }
+
+            // main.$feedbackButton.unbind().on('click', main.newTrial)
+
+
+
+            main.bound = [
+                main.$var1a,
+                main.$var1b,
+                main.$var2a,
+                main.$var2b
+            ]
+
+        },
+
+        unbindEvents: function(){
+            main.bound.forEach(function(obj){
+                obj.unbind()
+            })
+
+            // main.$leftRange.prop('disabled', true)
+            // main.$rightRange.prop('disabled', true)
+            //
+            // // (bad form to correct this here...)
+            // main.$leftRange.css('opacity', '1.0')
+            // main.$rightRange.css('opacity', '1.0')
+        },
+
+
+        var2a_Click: function(){
+
+            if(main.position2 === 0){ // v2_Data = 0 means it's the left, bad outcome
+
+                if(main.v2_Data[main.trialNumber] === 0){ // bad outcome
+                    
+                    if(main.condition == 'loss'){
+                        main.assets -= main.rewardAmount
+                    }
+
+                    main.bindEvents(1)
+                    main.render('guess')
+
+                }else{
+                    main.attentionFails += 1
+
+                    if(main.storyCondition == 'monetary'){
+                        if(main.var2b == 'OVAL'){
+                            alertMessage = 'Please click to indicate that Shape 1 is an '+main.var2b
+                        }else{
+                            alertMessage = 'Please click to indicate that Shape 1 is a '+main.var2b
+                        }
+                    }else{
+                        alertMessage = 'Please click to indicate that the patient\'s outcome was '+main.var2b
+                    }
+
+                    alert(alertMessage)
+
+                }
+            }else{ // v2_Data = 0 means it's the right, bad outcome
+                if(main.v2_Data[main.trialNumber] === 1){ // correctly clicked left
+                    
+                    if(main.condition == 'gain'){
+                        main.assets += main.rewardAmount
+                    }
+
+                    main.bindEvents(1)
+                    main.render('guess')
+                }else{
+                    main.attentionFails += 1
+
+                    if(main.condition == 'monetary'){
+                        if(main.var2b == 'OVAL'){
+                            alertMessage = 'Please click to indicate that Shape 1 is an '+main.var2b
+                        }else{
+                            alertMessage = 'Please click to indicate that Shape 1 is a '+main.var2b
+                        }
+                    }else{
+                        alertMessage = 'Please click to indicate that the patient\'s outcome was '+main.var2b
+                    }
+
+                    alert(alertMessage)
+
+                }
+
+            }
+        },
+
+        var2b_Click: function(){
+            // this function fires when they click the right div
+            // 0 is always bad
+            // if position2 = 0, and v2_Data[trialNumber] = 0, they should click the left
+
+            if(main.position2 === 0){ 
+                // position2 means left is bad
+                    // v2_Data = 0 means it's the left, bad outcome
+                    // v2_Data = 1 means it's the right, good outcome
+
+                if(main.v2_Data[main.trialNumber] === 1){ // good outcome, correctly clicked right
+                    if(main.condition == 'gain'){
+                        main.assets += main.rewardAmount
+                    }
+                    
+                    main.bindEvents(1)
+                    main.render('guess')
+                }else{
+                    main.attentionFails += 1
+
+                    if(main.condition == 'monetary'){
+                        if(main.var2a == 'OVAL'){
+                            alertMessage = 'Please click to indicate that Shape 1 is an '+main.var2a
+                        }else{
+                            alertMessage = 'Please click to indicate that Shape 1 is a '+main.var2a
+                        }
+                    }else{
+                        alertMessage = 'Please click to indicate that the patient\'s outcome was '+main.var2a
+                    }
+
+                    alert(alertMessage)
+
+                }
+            }else{ // v2_Data = 0 means it's the right, bad outcome
+                if(main.v2_Data[main.trialNumber] === 0){ // correctly clicked right
+                    if(main.condition == 'loss'){
+                        main.assets -= main.rewardAmount
+                    }
+                    main.bindEvents(1)
+                    main.render('guess')
+                }else{
+                    main.attentionFails += 1
+
+                    if(main.condition == 'monetary'){
+                        if(main.var2a == 'OVAL'){
+                            alertMessage = 'Please click to indicate that Shape 1 is an '+main.var2a
+                        }else{
+                            alertMessage = 'Please click to indicate that Shape 1 is a '+main.var2a
+                        }
+                    }else{
+                        alertMessage = 'Please click to indicate that the patient\'s outcome was '+main.var2a
+                    }
+
+                    alert(alertMessage)
+
+                }
+
+            }
+
+
+        },
+
+        scoreGuess: function(){
+            // if(main.frequency1 === 0){
+                // left value of var1a is common ()
+
+            // this is weird but correct. frequency1 is whether the left or right value is common.
+            // this is taken care of in the back end with 0s and 1s (either 0 is more common or 1)
+            // the name positions are randomized separately
+            // so if data == 0 is always the left and data == 1 is always the right, this works out fine.
+            if(main.v1_Data[main.trialNumber] == 0){
+                // redundant...
+                main.$correctInput.val(main.var1a)
+                $('#var1_value').val(main.var1a)
+            }else{
+                main.$correctInput.val(main.var1b)
+                $('#var1_value').val(main.var1b)
+            }
+            // }else if(main.frequency1 === 1){
+            //     // correct input: 0 is always left for var1.
+            //     if(main.v1_Data[main.trialNumber] == 0){
+            //         main.$correctInput.val(main.var1b)
+            //     }else{
+            //         main.$correctInput.val(main.var1a)
+            //     }
+            // }
+        },
+
+        newTrial: function(){
+            // this function fires when they click the feedback button ('next' button)
+            // if the scenario is over, it goes to the next page, otherwise it resets everything.
+            
+            main.sendAjax()
+            console.log('sending ajax')
+            if(main.trialNumber >= main.lengthOfData-1){
+                main.unbindEvents()
+                main.$co.hide()
+                main.mySubmit()
+            }else{
+                // new trial:
+                // console.log("NEW TRIAL")
+                main.trialNumber ++
+                
+
+
+
+                main.unbindEvents()
+                main.$co.css('opacity', '0.2')
+                setTimeout(function(){
+                    main.$co.css('opacity', '1.0')
+                    main.render('reset')
+                    main.getTrialStartTime()
+                    main.bindEvents(0)
+                    main.attentionFails = 0    
+                }, 300)
+                
+            }
+        },
+
+        getTrialStartTime: function(){
+            // does what it says on the box
+
+            var trialDate = new Date()
+            main.trialStartTime = trialDate.getTime()
+        },
+
+        sendAjax: function(){
+            // this function sends data to the server without re-loading the page
+            // it fires as part of main.feedback() after they click one of the pills
+
+            // trial time
+            trialDate = new Date()
+            trialTime = trialDate.getTime()
+            time = trialTime-main.trialStartTime
+            main.$timeInput.val(time)
+
+            main.$trialNumberInput.val(main.trialNumber)
+            main.$reloadsInput.val(main.reloads)
+            // number of attention fails on this trial
+            main.$attentionFailsInput.val(main.attentionFails)
+
+            // trial number
+            main.$trialInput.val(main.trialNumber+1)
+
+            // guess
+            main.$guessInput.val(main.guesses[main.guesses.length-1])
+
+            // bonus total
+            
+            $('#runningBonusInput').val(main.assets)
+            console.log("BONUS: "+String(main.assets))
+            // profit impact
+            main.$profitImpactInput.val(0)
+            if(main.v2_Data[main.trialNumber] === 0){
+                if(main.condition == 'loss'){
+                    main.$profitImpactInput.val(-6)
+                }else{
+                    main.$profitImpactInput.val(0)
+                }
+            }else{
+                if(main.condition == 'gain'){
+                    main.$profitImpactInput.val(6)
+                }else{
+                    main.$profitImpactInput.val(0)
+                }
+            }
+
+
+            // valence input
+            $('#valenceInput').val(main.valence)
+            
+
+
+
+            // send to back end with ajax
+            $.ajax({
+             url:"/ajax",
+             data: main.$dataform.serialize(),
+             // dataType: 'json',
+             type: "POST",
+             cache: false,
+             // error: main.AjaxFail,
+             // success: main.AjaxSuccess
+            });
+        },
+
+        AjaxFail: function(result){
+            alert('fail')
+            alert(result.status + ' ' + result.statusText)
+        },
+
+        AjaxSuccess: function(result){
+            alert('success')
+            // alert(result.d)
+        },
+
+        var1a_Function: function(){
+            // this function is bound to the pill on the left
+
+            main.guesses.push(main.var1a)
+            main.scoreGuess()
+            main.feedback()
+        },
+
+        var1b_Function: function(){
+            // this function is bound to the pill on the right
+
+            main.guesses.push(main.var1b)
+            main.scoreGuess()
+            main.feedback()
+        },
+
+        feedback: function(){
+            // this function runs after they make a pill guess
+            // it does a few things:
+                // unbinds the clicking events except for the 'next' button (feedbackButton)
+                // scores their answer
+                // renders feedback (and the button to continue)
+                // sends their guesses to the server
+
+            // temporarily suspend event binding for Drug A and B
+            main.bindEvents(2)
+
+
+
+            // score answer
+            if(main.guesses[main.guesses.length-1] == main.$correctInput.val()){
+                // correct
+                main.assets += main.accuracyBonusAmt
+                console.log('scoring accuracy bonus')
+            }
+
+            main.render('feedback')
+
+
+
+        },
+
+        mySubmit: function(){
+            $('#BonusInput2').val(main.assets)
+            $('#submitForm').submit()
+        },
+
+        startTimer: function(){
+            start = new Date();
+            return start.getTime();
+        },
+
+        insertBorder: function(object){
+            object.css('border', '5px solid grey')
+            object.css('-moz-border-radius', '20px')
+            object.css('border-radius', '15px')
+        },
+
+        removeBorder: function(object){
+            // doesn't really remove the border, because that creates weird visual jumps.
+            // instead makes the border the same color as a bootstrap well
+            object.css('border', '5px solid #F5F5F5')
+        }
+
+    }
+
+
+
+
+    var text = {
+        positiveOutcome: 'GOOD',
+        negativeOutcome: 'BAD'
+
+    }
+
+
+
+
+    main.init()
+
+
+
+
+
+
+
+
+})
+
+</script>
+{% endblock %}

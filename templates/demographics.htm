@@ -1,0 +1,178 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+	Demographics
+{% endblock %}
+
+{% block bodycontent %}
+
+<body data-spy="scroll" data-target=".navbar" data-offset="120">
+	<!-- Navbar -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<p class="navbar-text">Medication Task</p> 
+			</div>
+		</div>
+	</nav>
+
+
+
+	<!-- Display instructions in well -->
+	<div id= "container" class="container well">
+		<h1>Medication Task</h1>
+		
+		<form id="demographicsform" method="post" action="/demographics">
+			<b>Sex/Gender:</b><br>
+			&nbsp&nbsp&nbsp
+			<input type="radio" name="sex" id="s1" value="1">Female<br>
+			&nbsp&nbsp&nbsp
+			<input type="radio" name="sex" id="s2" value="2">Male<br>
+			&nbsp&nbsp&nbsp
+			<input type="radio" name="sex" id="s3" value="3">Prefer Not to Report<br>
+			<br>
+			<b>Ethnicity:</b><br>
+			&nbsp&nbsp&nbsp
+			<input type="radio" name="ethnicity" id="e1" value="1">Hispanic or Latino<br>
+			&nbsp&nbsp&nbsp
+			<input type="radio" name="ethnicity" id="e2" value="2">Not Hispanic or Latino<br>
+			&nbsp&nbsp&nbsp
+			<input type="radio" name="ethnicity" id="e3" value="3">Prefer Not to Report<br>
+			<br>
+
+
+			<b>Race:</b><br>
+			&nbsp&nbsp&nbsp
+			<input type="checkbox" name="race" id="r1" value=1>American Indian/Alaska Native<br>
+			&nbsp&nbsp&nbsp
+			<input type="checkbox" name="race" id="r2" value=2>Asian<br>
+			&nbsp&nbsp&nbsp
+			<input type="checkbox" name="race" id="r3" value=3>Native Hawaiian or Other Pacific Islander<br>
+			&nbsp&nbsp&nbsp
+			<input type="checkbox" name="race" id="r4" value=4>Black or African American<br>
+			&nbsp&nbsp&nbsp
+			<input type="checkbox" name="race" id="r5" value=5>White<br>
+			&nbsp&nbsp&nbsp
+			<input type="checkbox" name="race" id="r6" value=6>More than One Race<br>
+			&nbsp&nbsp&nbsp
+			<input type="checkbox" name="race" id="r7" value=7>Prefer Not to Report<br>
+			<br>
+
+			<b>Age:</b> (please enter your age as a number, e.g., 22)<br>
+			&nbsp&nbsp&nbsp
+			<input type="text" id="ageInput" name = "ageInput"/><br>
+			<br>
+
+			<input type="submit" value="Submit" id="submit" disabled="disabled">
+		</form>   
+		
+	</div>  
+</body>
+
+
+<script>
+
+$(document).ready(function(){
+	var demo = {
+
+		init: function(){
+			demo.cacheDom()
+
+			demo.eventBinder()
+		},
+
+		cacheDom: function(){
+			$s1 = document.getElementById('s1')
+			$s2 = document.getElementById('s2')
+			$s3 = document.getElementById('s3')
+			$e1 = document.getElementById('e1')
+			$e2 = document.getElementById('e2')
+			$e3 = document.getElementById('e3')
+			$r1 = document.getElementById('r1')
+			$r2 = document.getElementById('r2')
+			$r3 = document.getElementById('r3')
+			$r4 = document.getElementById('r4')
+			$r5 = document.getElementById('r5')
+			$r6 = document.getElementById('r6')
+			$r7 = document.getElementById('r7')
+			$ageInput = $('#ageInput')
+		},
+
+		eventBinder: function(){
+
+			$('#s1').unbind().on('change', demo.readytosubmit)
+			$('#s2').unbind().on('change', demo.readytosubmit)
+			$('#s3').unbind().on('change', demo.readytosubmit)
+			$('#e1').unbind().on('change', demo.readytosubmit)
+			$('#e2').unbind().on('change', demo.readytosubmit)
+			$('#e3').unbind().on('change', demo.readytosubmit)
+			$('#r1').unbind().on('change', demo.readytosubmit)
+			$('#r2').unbind().on('change', demo.readytosubmit)
+			$('#r3').unbind().on('change', demo.readytosubmit)
+			$('#r4').unbind().on('change', demo.readytosubmit)
+			$('#r5').unbind().on('change', demo.readytosubmit)
+			$('#r6').unbind().on('change', demo.readytosubmit)
+			$('#r7').unbind().on('change', demo.readytosubmit)
+			$ageInput.unbind().on('keypress', demo.readytosubmit)
+
+		},
+
+		readytosubmit: function(){
+
+			s1 = $s1.checked 
+			s2 = $s2.checked 
+			s3 = $s3.checked 
+			e1 = $e1.checked 
+			e2 = $e2.checked 
+			e3 = $e3.checked 
+			r1 = $r1.checked 
+			r2 = $r2.checked 
+			r3 = $r3.checked 
+			r4 = $r4.checked 
+			r5 = $r5.checked 
+			r6 = $r6.checked 
+			r7 = $r7.checked 
+			
+			schecked = s1 || s2 || s3
+			echecked = e1 || e2 || e3
+			rchecked = r1 || r2 || r3 || r4 || r5 || r6 || r7
+			
+			if (schecked && echecked && rchecked){
+				console.log("stuff checked");
+				// if age isn't blank
+				// var age = document.getElementById('age')
+				if(demo.isNumeric($('#ageInput').val())){
+					document.getElementById('submit').disabled=false;	
+				}
+			}
+			else{
+				console.log("something not checked");
+				document.getElementById('submit').disabled=true;
+			}
+		},
+
+		
+
+		isNumeric: function(n){
+			return !isNaN(parseFloat(n)) && isFinite(n);
+		}
+
+	}
+
+	// $('ageInput').on('change', demo.readytosubmit)
+	// $('#s1').on('change', function(){
+	// 	alert('change!')
+	// })
+
+	demo.init()
+
+})
+</script>
+
+
+
+{% endblock %}
+
+
+
+

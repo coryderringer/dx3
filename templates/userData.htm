@@ -1,0 +1,120 @@
+{% extends "_base.htm" %}
+
+{% block title %}
+	User Data
+{% endblock %}
+
+{% block bodycontent %}
+<head>
+</head>
+<body>
+
+
+<!-- ########## Data For Each User ########## -->
+<div class="container">
+	User Data:
+	<table class="table-bordered td">
+
+		<!-- Header Row -->
+		<tr>
+			<!-- condition info -->
+			<th>Usernum</th>
+			<th>Participant ID</th>
+			<th>condition</th>
+
+			<!-- ppt info -->
+			<th>Browser</th>
+			<th>Sex</th>
+			<th>Ethnicity</th>
+			<th>Race</th>
+			<th>Age</th>
+
+			<!-- randomizations -->
+			<th>Test Order</th>
+			<th>frequency1</th>
+			<th colspan=2>frequency2</th>
+			<th>position2</th>
+
+			<!-- Var names they saw -->
+			<th colspan=4>var1_Names</th>
+			<th colspan=4>var2_Names</th>
+			<th colspan=4>drugColors</th>
+			<th colspan=2>diseaseNames</th>
+
+			<!-- progress through app -->
+			<th>progress</th>
+			<th>Bonus</th>
+			<th>Total Trials</th> <!-- Should be no more than 96! -->
+			<th>Reloads</th> <!-- Should be 0! -->
+			<th colspan = 2>Test Attempts</th> <!-- Should be [1,1] -->
+
+
+			<!-- data they saw -->
+			<th colspan=96>v1_Data</th>
+			<th colspan=96>v2_Data</th>
+		</tr>
+
+		<!-- Subsequent Rows -->
+		{% for i in u %}
+		<tr>
+			<th>{{ i.usernum }}</th>
+			<th>{{ i.account }}</th>
+			<th>{{ i.condition }}</th>
+
+			<th>{{ i.browser }}</th>
+			<th>{{ i.sex }}</th>
+			<th>{{ i.ethnicity }}</th>
+			<th>{{ i.race }}</th>
+			<th>{{ i.age }}</th>
+
+			<th>{{ i.testOrder }}</th>
+			<th>{{ i.frequency1 }}</th>
+			{% for j in i.frequency2 %}
+				<th>{{ j }}</th>
+			{% endfor %}
+
+			<th>{{ i.position2 }}</th>
+
+			{% for j in i.var1_Names %}
+				<th>{{ j }}</th>
+			{% endfor %}
+
+			{% for j in i.var2_Names %}
+				<th>{{ j }}</th>
+			{% endfor %}
+
+			{% for j in i.drugColors %}
+				<th>{{ j }}</th>
+			{% endfor %}
+
+			{% for j in i.diseaseNames %}
+				<th>{{ j }}</th>
+			{% endfor %}
+
+			<th>{{ i.progress }}</th>
+			<th>{{ i.Bonuses }}</th>
+			<th>{{ i.totalTrials }}</th>
+			<th>{{ i.reloads }}</th>
+
+			{% for j in i.testAttempts %}
+				<th>{{ j }}</th>
+			{% endfor %}
+
+			{% for j in i.v1_Data %}
+				<th>{{ j }}</th>
+			{% endfor %}
+
+			{% for j in i.v2_Data %}
+				<th>{{ j }}</th>
+			{% endfor %}
+
+
+		</tr>
+		{% endfor %}
+	</table>
+
+</div>
+
+
+</body>
+{% endblock %}
