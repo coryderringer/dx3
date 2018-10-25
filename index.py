@@ -11,7 +11,7 @@ LengthOfPractice=30
 NumScenarios=2
 rewardAmount = 6 # number of cents added/subtracted for a good/bad outcome
 
-# test test
+
 # session variables:
 # account
 # BonusOne
