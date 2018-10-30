@@ -59,7 +59,7 @@ class User(db.Model):
 	position2 =			db.IntegerProperty()
 	var1_Names =		db.ListProperty(str)
 	var2_Names =		db.ListProperty(str)
-	condition =			db.StringProperty() #gain/loss
+	condition =			db.StringProperty() # high stakes (hs)/low stakes (ls)
 	storyCondition =	db.StringProperty() # story/monetary/combined
 	drugColors =		db.ListProperty(str)
 	diseaseNames =		db.ListProperty(str)
@@ -95,7 +95,7 @@ class ScenarioData(db.Model):
 	profitImpact = 		db.IntegerProperty()
 	valence = 			db.StringProperty() # within-subs valence condition; 0 means rare-positive, 1 means rare-negative
 	storyCondition =	db.StringProperty() # constant storyCondition; monetary, story, combined
-	condition = 		db.StringProperty() # gain/loss
+	condition = 		db.StringProperty() # hs/ls
 	var1_value = 		db.StringProperty()
 	var2_value =		db.StringProperty()
 	frequency1 =		db.IntegerProperty()
@@ -114,7 +114,7 @@ class FinalJudgmentData(db.Model):
 	scenario = 			db.IntegerProperty()
 	valence = 			db.StringProperty() # 0 means rare-positive
 	storyCondition = 	db.StringProperty() # monetary, story, combined
-	condition = 		db.StringProperty() # gain/loss
+	condition = 		db.StringProperty() # hs/ls
 
 	# visuals
 	# in the story storyConditions these are drug names
@@ -356,7 +356,7 @@ class AjaxMemoryHandler(webapp.RequestHandler):
   		scenario = self.session['scenario']
 
   		valence = str(self.request.get('valence')) # this is the match between position2 and frequency2; sent to this handler as 'rare-positive' or 'rare-negative'
-		condition = str(self.request.get('condition')) # gain/loss
+		condition = str(self.request.get('condition')) # hs/ls
   		leftDrugName = str(self.request.get('leftDrugName'))
   		rightDrugName = str(self.request.get('rightDrugName'))
   		leftDrugRarity = str(self.request.get('leftDrugRarity'))
@@ -415,7 +415,7 @@ class AjaxMemoryHandler(webapp.RequestHandler):
 				# drug properties
 				leftDrugName = leftDrugName,
 				rightDrugName = rightDrugName,
-				leftDrugRarity = leftDrugRarity, # DO THESE
+				leftDrugRarity = leftDrugRarity, 
 				rightDrugRarity = rightDrugRarity,
 				leftDrugColor = leftDrugColor,
 				rightDrugColor = rightDrugColor,
@@ -554,7 +554,7 @@ class ScenarioHandler(webapp.RequestHandler):
 				'test': 0,
 				'bonus': self.session['runningBonuses'],
 				'storyCondition': self.session['storyCondition'], # monetary, story, combined
-				'condition':self.session['condition'], # gain/loss
+				'condition':self.session['condition'], # hs/ls
 				'var1_Names_Left': self.session['var1_Names'][2*scenario],
 				'var1_Names_Right': self.session['var1_Names'][2*scenario+1],
 				'var2_Names_Left': self.session['var2_Names'][2*scenario],
@@ -611,7 +611,7 @@ class ScenarioHandler(webapp.RequestHandler):
 			'frequency1': self.session['frequency1'],
 			'frequency2': self.session['frequency2'][scenario],
 			'storyCondition': self.session['storyCondition'], # combined/story/monetary valence
-			'condition': self.session['condition'], # gain/loss
+			'condition': self.session['condition'], # hs/ls
 			'testOrder': self.session['testOrder'],
 			'disease': self.session['diseaseNames'][scenario],
 			'var1_Names_Left': self.session['var1_Names'][2*scenario],
@@ -738,7 +738,7 @@ class FinalJudgmentHandler(webapp.RequestHandler):
 				var2_Names_Right = self.session['var2_Names'][2*scenario+1]
 
 
-				condition = self.session['condition'] # gain/loss
+				condition = self.session['condition'] # hs/ls
 
 
 				logging.info("PRESCENARIO HANDLER")
@@ -838,7 +838,7 @@ class DataHandler(webapp.RequestHandler):
 			d=que.fetch(limit=10000)
 
 			que2=db.Query(User)
-			que2.filter("usernum >", 100).order("usernum")
+			que2.order("usernum")
 			u=que2.fetch(limit=10000)
 
 			que3 = db.Query(FinalJudgmentData)
@@ -1004,7 +1004,7 @@ class MturkIDHandler(webapp.RequestHandler):
 		form_fields = {
 			"ID": ID,
 			"ClassOfStudies": 'Cory Dissertation',
-			"StudyNumber": 2
+			"StudyNumber": 3
 			}
 
 		form_data = urllib.urlencode(form_fields)
@@ -1056,18 +1056,18 @@ class MturkIDHandler(webapp.RequestHandler):
 					# position2 (visual): just randomize the presentation of the stimuli in Python, than read them into JS in the order that they're randomized in.
 						# for the story condition this will have to be read in consistently both times.
 
-				# in E2, storyCondition is gain vs loss
-					# gain framing: start with $0; each pos outcome adds $0.06
-					# loss framing: start with $6; each neg outcome subtracts $0.06
-						# Would starting with $5.76 make participants suspicious about the bonus amount?
+				# in E3, Condition is high/low stakes
+					# high stakes: each good/bad outcome has 0.18 stakes
+					# low stakes: each good/bad outcome has 0.06 stakes
+					# everybody starts with .30 again
 
 				if self.session['usernum'] % 2 == 0:
-					self.session['condition'] = 'gain'
-					self.session['runningBonuses'] = 0
+					self.session['condition'] = 'hs'
+					
 				else:
-					self.session['condition'] = 'loss'
-					self.session['runningBonuses'] = 576
+					self.session['condition'] = 'ls'
 
+				self.session['runningBonuses'] = 30
 				self.session['storyCondition'] = 'combined' # constant for E2
 
 				# position1 and position2 (visual)

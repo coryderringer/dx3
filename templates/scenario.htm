@@ -198,11 +198,14 @@ $(document).ready(function(){
             }
             
 
-            main.condition = '{{condition}}' // gain/loss
+            main.condition = '{{condition}}' // hs/ls
             main.storyCondition = '{{storyCondition}}' // monetary/story/combined
 
-            
-            main.rewardAmount = {{rewardAmount}}
+            if(main.condition == 'ls'){
+                main.rewardAmount = {{rewardAmount}}
+            }else{
+                main.rewardAmount = {{rewardAmount}}*3
+            }
         
             
             // testing:
@@ -559,7 +562,9 @@ $(document).ready(function(){
                         // it's a bad outcome on the left
                         main.$var2b.css('opacity', '0.2')
                         main.insertBorder(main.$var2a)
-                        if(main.condition == 'loss'){
+                        if(main.condition == 'hs'){ // high stakes
+                            $('#var2a_outcome_text').text('-18 cents!').css('visibility', 'visible')
+                        }else{ // low stakes
                             $('#var2a_outcome_text').text('-6 cents!').css('visibility', 'visible')
                         }
 
@@ -567,7 +572,9 @@ $(document).ready(function(){
                         // it's a bad outcome on the right
                         main.$var2a.css('opacity', '0.2')
                         main.insertBorder(main.$var2b)    
-                        if(main.condition == 'loss'){
+                        if(main.condition == 'hs'){ // high stakes
+                            $('#var2b_outcome_text').text('-18 cents!').css('visibility', 'visible')
+                        }else{
                             $('#var2b_outcome_text').text('-6 cents!').css('visibility', 'visible')
                         }
                     }
@@ -578,14 +585,18 @@ $(document).ready(function(){
                         // it's a good outcome on the right
                         main.$var2a.css('opacity', '0.2')
                         main.insertBorder(main.$var2b)
-                        if(main.condition == 'gain'){
+                        if(main.condition == 'hs'){ // high stakes
+                            $('#var2b_outcome_text').text('+18 cents!').css('visibility', 'visible')  
+                        }else{ // low stakes
                             $('#var2b_outcome_text').text('+6 cents!').css('visibility', 'visible')  
                         }
                     }else{
                         // it's a good outcome on the left
                         main.$var2b.css('opacity', '0.2')
                         main.insertBorder(main.$var2a)
-                        if(main.condition == 'gain'){
+                        if(main.condition == 'hs'){ // high stakes
+                            $('#var2a_outcome_text').text('+18 cents!').css('visibility', 'visible')  
+                        }else{ // low stakes
                             $('#var2a_outcome_text').text('+6 cents!').css('visibility', 'visible')  
                         }
                     }
@@ -738,10 +749,8 @@ $(document).ready(function(){
             if(main.position2 === 0){ // v2_Data = 0 means it's the left, bad outcome
 
                 if(main.v2_Data[main.trialNumber] === 0){ // bad outcome
-                    
-                    if(main.condition == 'loss'){
-                        main.assets -= main.rewardAmount
-                    }
+                    main.assets -= main.rewardAmount
+
 
                     main.bindEvents(1)
                     main.render('guess')
@@ -765,9 +774,9 @@ $(document).ready(function(){
             }else{ // v2_Data = 0 means it's the right, bad outcome
                 if(main.v2_Data[main.trialNumber] === 1){ // correctly clicked left
                     
-                    if(main.condition == 'gain'){
-                        main.assets += main.rewardAmount
-                    }
+
+                    main.assets += main.rewardAmount
+
 
                     main.bindEvents(1)
                     main.render('guess')
@@ -802,10 +811,7 @@ $(document).ready(function(){
                     // v2_Data = 1 means it's the right, good outcome
 
                 if(main.v2_Data[main.trialNumber] === 1){ // good outcome, correctly clicked right
-                    if(main.condition == 'gain'){
-                        main.assets += main.rewardAmount
-                    }
-                    
+                    main.assets += main.rewardAmount
                     main.bindEvents(1)
                     main.render('guess')
                 }else{
@@ -826,9 +832,9 @@ $(document).ready(function(){
                 }
             }else{ // v2_Data = 0 means it's the right, bad outcome
                 if(main.v2_Data[main.trialNumber] === 0){ // correctly clicked right
-                    if(main.condition == 'loss'){
-                        main.assets -= main.rewardAmount
-                    }
+  
+                    main.assets -= main.rewardAmount
+
                     main.bindEvents(1)
                     main.render('guess')
                 }else{
@@ -945,16 +951,16 @@ $(document).ready(function(){
             // profit impact
             main.$profitImpactInput.val(0)
             if(main.v2_Data[main.trialNumber] === 0){
-                if(main.condition == 'loss'){
-                    main.$profitImpactInput.val(-6)
+                if(main.condition == 'hs'){
+                    main.$profitImpactInput.val(-18)
                 }else{
-                    main.$profitImpactInput.val(0)
+                    main.$profitImpactInput.val(-6)
                 }
             }else{
-                if(main.condition == 'gain'){
-                    main.$profitImpactInput.val(6)
+                if(main.condition == 'hs'){
+                    main.$profitImpactInput.val(18)
                 }else{
-                    main.$profitImpactInput.val(0)
+                    main.$profitImpactInput.val(6)
                 }
             }
 

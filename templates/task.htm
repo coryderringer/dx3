@@ -36,11 +36,7 @@
                 <div id="instructions2" class="tab-pane fade">
                     <div style="height:175px">
                         <h3>Overview</h3>
-                        <p name="story">For each patient, you will first see whether their outcome was GOOD or BAD. You will be asked to <b>confirm</b> the outcome by clicking the appropriate face. 
-
-                            <span name="gain">Each GOOD outcome (like this one) adds 6 cents to your bonus. In this example, your Current Bonus would increase from $0.30 to $0.36. (See "Current Bonus" on the right side.)</span>
-                            
-                            <span name="loss">Each GOOD outcome (like this one) does not affect your bonus. In this example, your Current Bonus would remain the same at $0.30. (See "Current Bonus" on the right side.)</span>
+                        <p name="story">For each patient, you will first see whether their outcome was GOOD or BAD. You will be asked to <b>confirm</b> the outcome by clicking the appropriate face. Each GOOD outcome (like this one) adds <span name="hs">18</span><span name="ls">6</span> cents to your bonus. In this example, your Current Bonus would increase from $0.30 to <span name="hs">$0.48</span><span name="ls">$0.36</span>. (See "Current Bonus" on the right side.)
 
                         </p>
                         
@@ -84,13 +80,10 @@
                 <div id="instructions5" class="tab-pane fade">
                     <div style="height:175px">
                         <h3>Overview</h3>
-                        <p name="story">This patient had a BAD outcome. 
-
-                            <span name="gain">Each BAD outcome (like this one) does not affect your bonus. In this example, your Current Bonus would remain the same at $0.39. (See "Current Bonus" on the right side.)</span>
-                            
-                            <span name="loss">Each BAD outcome (like this one) subtracts 6 cents from your bonus. In this example, your Current Bonus would decrease from $0.33 to $0.27. (See "Current Bonus" on the right side.)</span>
-
+                        <p name="story">This patient had a BAD outcome. Each BAD outcome (like this one) subtracts <span name="hs">18</span><span name="ls">6</span> cents from your bonus. In this example, your Current Bonus would decrease from <span name="hs">$0.51</span><span name="ls">$0.39</span> to $0.33. (See "Current Bonus" on the right side.)
                         </p>
+
+                        <p>It is theoretically possible for your bonus to be negative. However, it is extremely unlikely that you will end the study with a negative bonus. (If you do end the study with a negative bonus, your bonus will be rounded up to zero.)</p>
                         
                     </div>
 
@@ -259,6 +252,7 @@ $(document).ready(function(){
             main.attentionFails = 0 // resets every trial
 
             main.condition = '{{condition}}'
+
             
             main.storystoryCondition = '{{storyCondition}}'
 
@@ -377,12 +371,12 @@ $(document).ready(function(){
             
             if(stage == 0){ // very beginning, opacity of 0.2 for the example div
                 console.log('stage 0')
-                if(main.condition == 'gain'){
-                    $('[name="loss"]').hide()
-                    $('[name="gain"]').show()
+                if(main.condition == 'hs'){
+                    $('[name="ls"]').hide()
+                    $('[name="hs"]').show()
                 }else{
-                    $('[name="gain"]').hide()
-                    $('[name="loss"]').show()
+                    $('[name="hs"]').hide()
+                    $('[name="ls"]').show()
                 }
 
                 // story/combined:
@@ -456,15 +450,15 @@ $(document).ready(function(){
     
                     main.$feedbackDiv.text('')
                 
-                    if(main.condition == 'gain'){
+                    if(main.condition == 'hs'){
+                        main.$totalBonusSpan.text('0.48')    
+                        $('#var2a_outcome_text').text('+18 cents!')                        
+                    }else{
                         main.$totalBonusSpan.text('0.36')    
                         $('#var2a_outcome_text').text('+6 cents!')
-                        $('#var2a_outcome_text').css('visibility', 'visible')
-                    }else{
-                        main.$totalBonusSpan.text('0.30')    
-                        // $('#var2a_outcome_text').text('')
                     }
-
+                    $('#var2a_outcome_text').css('visibility', 'visible')
+                    
                     
 
                 }else{
@@ -474,18 +468,19 @@ $(document).ready(function(){
     
                     main.$feedbackDiv.text('')
                 
-                    if(main.condition == 'gain'){
-                        main.$totalBonusSpan.text('0.36')    
-                        $('#var2b_outcome_text').text('+6 cents!')
-                        $('#var2b_outcome_text').css('visibility', 'visible')
+                    if(main.condition == 'hs'){
+                        main.$totalBonusSpan.text('0.48')    
+                        $('#var2b_outcome_text').text('+18 cents!')
                     }else{
-                        main.$totalBonusSpan.text('0.30')    
-                        // $('#var2b_outcome_text').text('-0 cents!')
+                        main.$totalBonusSpan.text('0.36')    
+                        $('#var2b_outcome_text').text('+6 cents!') 
                     }
+                    $('#var2b_outcome_text').css('visibility', 'visible')
 
                     
 
                 }
+                
 
                 // if coming backwards
                 main.$accuracyBonusSpan.text('0.00')
@@ -508,19 +503,20 @@ $(document).ready(function(){
                 main.$var1b.css('opacity', '0.2')
                 main.insertBorder(main.$var1a)
                 main.$feedbackDiv.html('Correct!<br>+3 cents!')
-                $('#var2_outcome_image').prop('src', '/static/images/good.png') // backward
-                $('[name="patientNumber"]').text('1') // backward
+                
+                // backward
+                $('#var2_outcome_image').prop('src', '/static/images/good.png') 
+                 $('[name="outcomeSpan"]').text('GOOD')
+                $('[name="patientNumber"]').text('1') 
 
                 main.$accuracyBonusSpan.text('0.03')
-                if(main.storyCondition == 'story'){
-                    main.$totalBonusSpan.text('0.33')
+                
+                if(main.condition == 'hs'){
+                    main.$totalBonusSpan.text('0.51')
                 }else{
-                    if(main.condition == 'gain'){
-                        main.$totalBonusSpan.text('0.39')
-                    }else{
-                        main.$totalBonusSpan.text('0.33')
-                    }
+                    main.$totalBonusSpan.text('0.39')
                 }
+
                 main.$accuracyBonusDiv.css('opacity', '1.0')
                 main.$totalBonusDiv.css('opacity', '1.0')
                 main.$scoreDiv.css('opacity', '1.0')
@@ -555,11 +551,11 @@ $(document).ready(function(){
               
                 main.$feedbackDiv.text('')
                 
-                // haven't changed the bonus yet, so undo the stage 5 bonuses
-                if(main.condition == 'gain'){
-                    main.$totalBonusSpan.text('0.39')
+                // haven't changed the bonus yet, so undo the stage 5 changes (should be same as stage 4)
+                if(main.condition == 'hs'){
+                    main.$totalBonusSpan.text('0.51')
                 }else{
-                    main.$totalBonusSpan.text('0.33')
+                    main.$totalBonusSpan.text('0.39')
                 }
 
                 // if coming backwards
@@ -575,32 +571,32 @@ $(document).ready(function(){
             }else if(stage == 5){
                 console.log('stage 5')
 
+                main.$totalBonusSpan.text('0.33')  
+                
                 if(main.position2 == 1){
 
                     main.insertBorder(main.$var2b)
-                    main.$var2a.css('opacity', '0.2')
-                    if(main.condition == 'gain'){
-                        main.$totalBonusSpan.text('0.39')    
-                        // $('#var2b_outcome_text').text('+0 cents!')
+                    main.$var2a.css('opacity', '0.2')  
+                    if(main.condition == 'hs'){
+                        $('#var2b_outcome_text').text('-18 cents!')    
                     }else{
-                        main.$totalBonusSpan.text('0.27')    
                         $('#var2b_outcome_text').text('-6 cents!')
-                        $('#var2b_outcome_text').css('visibility', 'visible')
                     }
-
                     
-
+                    $('#var2b_outcome_text').css('visibility', 'visible')
+                    
                 }else{
                     main.insertBorder(main.$var2a)
                     main.$var2b.css('opacity', '0.2')
-                    if(main.condition == 'gain'){
-                        main.$totalBonusSpan.text('0.39')    
-                        // $('#var2a_outcome_text').text('+0 cents!')
+                    
+                       
+                    if(main.condition == 'hs'){
+                        $('#var2a_outcome_text').text('-18 cents!')
                     }else{
-                        main.$totalBonusSpan.text('0.27')    
                         $('#var2a_outcome_text').text('-6 cents!')
-                        $('#var2a_outcome_text').css('visibility', 'visible')
                     }
+                    $('#var2a_outcome_text').css('visibility', 'visible')
+                    
 
                     
                 }
@@ -613,19 +609,21 @@ $(document).ready(function(){
 
             }else if(stage == 6){
                 console.log('stage 6')
+
+                main.$totalBonusSpan.text('0.36')
+
                 main.$var1b.css('opacity', '0.2')
 
-                main.insertBorder(main.$var1a)                
-                main.insertBorder(main.$var1a)
+                main.insertBorder(main.$var1a)                                
                 main.$feedbackDiv.html('Correct!<br>+3 cents!')
-
-                if(main.condition == 'gain'){
-                    main.$totalBonusSpan.text('0.42')    
-                    $('#var2b_outcome_text').text('+0 cents!')
-                }else{
-                    main.$totalBonusSpan.text('0.30')    
-                    $('#var2b_outcome_text').text('-6 cents!')
-                }
+                
+                // if(main.condition == 'hs'){
+                    
+                //     $('#var2b_outcome_text').text('+0 cents!')
+                // }else{
+                //     main.$totalBonusSpan.text('0.30')    
+                //     $('#var2b_outcome_text').text('-6 cents!')
+                // }
 
             }
             main.$co.show()
